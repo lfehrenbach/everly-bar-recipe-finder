@@ -273,37 +273,37 @@ export default function Home() {
       </div>
 
       {/* Modal */}
-      {showAddModal && (
-        <AddCocktailModal
-          initialData={editingRecipe}
-          onClose={() => {
-            setShowAddModal(false);
-            setEditingRecipe(null);
-          }}
-          onAdd={async (newRecipe) => {
-            try {
-              if (editingRecipe) {
-                const { error } = await supabase.from("cocktails").update(newRecipe).eq("id", editingRecipe.id);
-                if (error) throw error;
-                setRecipes((prev) => prev.map((r) => (r.id === editingRecipe.id ? newRecipe : r)));
-                toast.success(`Updated "${newRecipe.name}" 🍸`);
-              } else {
-                const { error } = await supabase.from("cocktails").insert([newRecipe]);
-                if (error) throw error;
-                setRecipes((prev) => [...prev, newRecipe]);
-                toast.success(`Added "${newRecipe.name}" 🥂`);
-              }
-            } catch (error) {
-              const message = error instanceof Error ? error.message : JSON.stringify(error);
-              console.error("❌ Error saving cocktail:", message);
-              toast.error(`❌ Failed to save cocktail: ${message}`);
-            } finally {
-              setShowAddModal(false);
-              setEditingRecipe(null);
-            }
-          }}
-        />
-      )}
+{showAddModal && (
+  <AddCocktailModal
+    initialData={editingRecipe ?? undefined}
+    onClose={() => {
+      setShowAddModal(false);
+      setEditingRecipe(null);
+    }}
+    onAdd={async (newRecipe) => {
+      try {
+        if (editingRecipe) {
+          const { error } = await supabase.from("cocktails").update(newRecipe).eq("id", editingRecipe.id);
+          if (error) throw error;
+          setRecipes((prev) => prev.map((r) => (r.id === editingRecipe.id ? newRecipe : r)));
+          toast.success(`Updated "${newRecipe.name}" 🍸`);
+        } else {
+          const { error } = await supabase.from("cocktails").insert([newRecipe]);
+          if (error) throw error;
+          setRecipes((prev) => [...prev, newRecipe]);
+          toast.success(`Added "${newRecipe.name}" 🥂`);
+        }
+      } catch (error) {
+        const message = error instanceof Error ? error.message : JSON.stringify(error);
+        console.error("❌ Error saving cocktail:", message);
+        toast.error(`❌ Failed to save cocktail: ${message}`);
+      } finally {
+        setShowAddModal(false);
+        setEditingRecipe(null);
+      }
+    }}
+  />
+)}
     </main>
   );
 }

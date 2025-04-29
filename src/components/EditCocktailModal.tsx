@@ -21,7 +21,7 @@ export default function EditCocktailModal({
     setForm(recipeToEdit);
   }, [recipeToEdit]);
 
-const updateField = <K extends keyof Recipe>(field: K, value: Recipe[K]) => {
+const updateField = <K extends keyof Cocktail>(field: K, value: Cocktail[K]) => {
   setForm((prev) => ({ ...prev, [field]: value }));
 };
 
