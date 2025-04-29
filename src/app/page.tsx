@@ -196,17 +196,17 @@ export default function Home() {
                   {/* Garnish */}
                   {isCocktail(item) && item.garnish && <p><strong>Garnish:</strong> {item.garnish}</p>}
 
-                  {/* Allergens */}
-                  {isCocktail(item) && item.allergens?.length > 0 && (
-                    <div className="mt-4 text-sm text-red-600 flex flex-wrap gap-2">
-                      ⚠️ Contains: {item.allergens.map((a, i) => (
-                        <span key={i}>
-                          {a === "nuts" ? "🥜 Nuts" : a === "eggs" ? "🥚 Eggs" : a === "dairy" ? "🥛 Dairy" : "🌾 Gluten"}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-
+  // Allergen section:
+  {isCocktail(item) && Array.isArray(item.allergens) && item.allergens.length > 0 && (
+    <div className="mt-4 text-sm text-red-600 flex flex-wrap gap-2">
+      ⚠️ Contains:{" "}
+      {item.allergens.map((a, i) => (
+        <span key={i}>
+          {a === "nuts" ? "🥜 Nuts" : a === "eggs" ? "🥚 Eggs" : a === "dairy" ? "🥛 Dairy" : "🌾 Gluten"}
+        </span>
+      ))}
+    </div>
+  )}
                   {/* Sweetness Meter */}
                   {isCocktail(item) && item.sweetness && (
                     <div className="mt-9">
@@ -232,26 +232,25 @@ export default function Home() {
                     </div>
                   )}
 
-                  {/* Liquor Types */}
-                  {isCocktail(item) && item.liquorTypes?.length > 0 && (
-                    <div className="mt-8 text-sm text-purple-600 flex items-center gap-2">
-                      🥃 <span className="font-semibold">Liquor:</span>{" "}
-                      {item.liquorTypes.map((l) => l.charAt(0).toUpperCase() + l.slice(1)).join(", ")}
-                    </div>
-                  )}
+  // Liquor types:
+  {isCocktail(item) && Array.isArray(item.liquorTypes) && item.liquorTypes.length > 0 && (
+    <div className="mt-8 text-sm text-purple-600 flex items-center gap-2">
+      🥃 <span className="font-semibold">Liquor:</span>{" "}
+      {item.liquorTypes.map((l) => l.charAt(0).toUpperCase() + l.slice(1)).join(", ")}
+    </div>
+  )}
 
-                  {/* Seasons */}
-                  {isCocktail(item) && item.seasons?.length > 0 && (
-                    <div className="mt-4 text-sm text-blue-600 flex flex-wrap items-center gap-2">
-                      🌿 Season:{" "}
-                      {item.seasons.map((s, i) => (
-                        <span key={i}>
-                          {s === "spring" ? "🌸 Spring" : s === "summer" ? "☀️ Summer" : s === "fall" ? "🍂 Fall" : "❄️ Winter"}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-
+ // Seasons:
+   {isCocktail(item) && Array.isArray(item.seasons) && item.seasons.length > 0 && (
+    <div className="mt-4 text-sm text-blue-600 flex flex-wrap items-center gap-2">
+      🌿 Season:{" "}
+      {item.seasons.map((s, i) => (
+        <span key={i}>
+          {s === "spring" ? "🌸 Spring" : s === "summer" ? "☀️ Summer" : s === "fall" ? "🍂 Fall" : "❄️ Winter"}
+        </span>
+      ))}
+    </div>
+  )}
                   {/* Edit/Delete */}
                   <div className="mt-4 flex justify-end">
                     <DropdownMenu>
