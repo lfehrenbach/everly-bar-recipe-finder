@@ -1,5 +1,6 @@
 "use client";
 
+import type { Cocktail, Batch } from "@/types";
 import { useState, useEffect } from "react";
 import { supabase } from "../supabase";
 import { Input } from "@/components/ui/input";
@@ -18,9 +19,9 @@ import { MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 import { Toaster, toast } from "sonner";
 
 export default function Home() {
-  const [recipes, setRecipes] = useState<any[]>([]);
-  const [batches, setBatches] = useState<any[]>([]);
-  const [editingRecipe, setEditingRecipe] = useState<any | null>(null);
+const [recipes, setRecipes] = useState<Cocktail[]>([]);
+const [batches, setBatches] = useState<Batch[]>([]);
+const [editingRecipe, setEditingRecipe] = useState<Cocktail | null>(null);
   const [showAddModal, setShowAddModal] = useState(false);
   const [query, setQuery] = useState("");
   const [showBatches, setShowBatches] = useState(false);
