@@ -34,12 +34,8 @@ export default function Home() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const { data: cocktailData, error: cocktailError } = await supabase
-        .from("cocktails")
-        .select("*");
-      const { data: batchData, error: batchError } = await supabase
-        .from("batches")
-        .select("*");
+      const { data: cocktailData, error: cocktailError } = await supabase.from("cocktails").select("*");
+      const { data: batchData, error: batchError } = await supabase.from("batches").select("*");
 
       if (cocktailError) {
         console.error("❌ Error fetching cocktails:", cocktailError);
@@ -62,10 +58,7 @@ export default function Home() {
     if (sortOption === "name-desc") return b.name.localeCompare(a.name);
     if (sortOption === "sweetness") {
       const order = { dry: 1, "semi-dry": 2, balanced: 3, sweet: 4 };
-      return (
-        (order[a.sweetness || "balanced"] ?? 0) -
-        (order[b.sweetness || "balanced"] ?? 0)
-      );
+      return (order[a.sweetness || "balanced"] ?? 0) - (order[b.sweetness || "balanced"] ?? 0);
     }
     if (sortOption === "liquorForward") {
       return (b.liquorForward ? 1 : 0) - (a.liquorForward ? 1 : 0);
@@ -76,63 +69,37 @@ export default function Home() {
   const filteredRecipes = sortedRecipes.filter((recipe) => {
     const matchesQuery =
       recipe.name.toLowerCase().includes(query.toLowerCase()) ||
-      recipe.ingredients?.some((ing) =>
-        ing.toLowerCase().includes(query.toLowerCase())
-      );
-    const matchesSweetness =
-      !filterSweetness || recipe.sweetness === filterSweetness;
+      recipe.ingredients?.some((ing: string) => ing.toLowerCase().includes(query.toLowerCase()));
+    const matchesSweetness = !filterSweetness || recipe.sweetness === filterSweetness;
     const matchesAllergens =
-      filterAllergens.length === 0 ||
-      !recipe.allergens?.some((a) => filterAllergens.includes(a));
+      filterAllergens.length === 0 || !recipe.allergens?.some((a: string) => filterAllergens.includes(a));
     const matchesSeasons =
-      filterSeasons.length === 0 ||
-      recipe.seasons?.some((s) => filterSeasons.includes(s));
+      filterSeasons.length === 0 || recipe.seasons?.some((s: string) => filterSeasons.includes(s));
     const matchesLiquorTypes =
-      filterLiquorTypes.length === 0 ||
-      recipe.liquorTypes?.some((t) => filterLiquorTypes.includes(t));
-    return (
-      matchesQuery &&
-      matchesSweetness &&
-      matchesAllergens &&
-      matchesSeasons &&
-      matchesLiquorTypes
-    );
+      filterLiquorTypes.length === 0 || recipe.liquorTypes?.some((t: string) => filterLiquorTypes.includes(t));
+    return matchesQuery && matchesSweetness && matchesAllergens && matchesSeasons && matchesLiquorTypes;
   });
 
   const filteredBatches = batches.filter(
     (batch) =>
       batch.name.toLowerCase().includes(query.toLowerCase()) ||
-      batch.ingredients?.some((ing) =>
-        ing.toLowerCase().includes(query.toLowerCase())
-      )
+      batch.ingredients?.some((ing: string) => ing.toLowerCase().includes(query.toLowerCase()))
   );
 
   return (
     <main className="p-4 sm:p-6 max-w-4xl mx-auto">
       <Toaster richColors position="top-center" />
-      <h1 className="text-2xl sm:text-3xl font-bold mb-4 text-center">
-        Everly Bar Recipe Finder
-      </h1>
+      <h1 className="text-2xl sm:text-3xl font-bold mb-4 text-center">Everly Bar Recipe Finder</h1>
 
       {/* Top Buttons */}
       <div className="flex flex-wrap sm:flex-nowrap gap-2 sm:gap-4 mb-6 justify-center sm:justify-start">
-        <Button
-          variant={!showBatches ? "default" : "outline"}
-          onClick={() => setShowBatches(false)}
-        >
+        <Button variant={!showBatches ? "default" : "outline"} onClick={() => setShowBatches(false)}>
           🍸 Cocktail Recipes
         </Button>
-        <Button
-          variant={showBatches ? "default" : "outline"}
-          onClick={() => setShowBatches(true)}
-        >
+        <Button variant={showBatches ? "default" : "outline"} onClick={() => setShowBatches(true)}>
           🧪 Batch & Prep
         </Button>
-        <Button
-          variant="outline"
-          className="hidden sm:inline-flex"
-          onClick={() => setShowFilters((prev) => !prev)}
-        >
+        <Button variant="outline" className="hidden sm:inline-flex" onClick={() => setShowFilters((prev) => !prev)}>
           {showFilters ? "Hide Filters" : "Show Filters"}
         </Button>
         <Button
@@ -149,11 +116,7 @@ export default function Home() {
       {/* Search Bar */}
       <Input
         type="text"
-        placeholder={
-          showBatches
-            ? "Search batch or ingredient..."
-            : "Search cocktail or ingredient..."
-        }
+        placeholder={showBatches ? "Search batch or ingredient..." : "Search cocktail or ingredient..."}
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         className="mb-6"
@@ -162,12 +125,8 @@ export default function Home() {
       {/* Filters */}
       {!showBatches && showFilters && (
         <div className="flex flex-wrap gap-2 sm:gap-4 mb-6 text-sm items-center border rounded p-4 bg-white shadow-sm overflow-x-auto">
-          {/* Sorting Dropdown */}
-          <select
-            className="border p-2 rounded"
-            value={sortOption}
-            onChange={(e) => setSortOption(e.target.value)}
-          >
+          {/* Sorting */}
+          <select className="border p-2 rounded" value={sortOption} onChange={(e) => setSortOption(e.target.value)}>
             <option value="">Sort by...</option>
             <option value="name-asc">Name A–Z</option>
             <option value="name-desc">Name Z–A</option>
@@ -176,11 +135,7 @@ export default function Home() {
           </select>
 
           {/* Sweetness Filter */}
-          <select
-            className="border p-2 rounded"
-            value={filterSweetness}
-            onChange={(e) => setFilterSweetness(e.target.value)}
-          >
+          <select className="border p-2 rounded" value={filterSweetness} onChange={(e) => setFilterSweetness(e.target.value)}>
             <option value="">All Sweetness</option>
             <option value="dry">Dry</option>
             <option value="semi-dry">Semi-Dry</option>
@@ -196,9 +151,7 @@ export default function Home() {
                 checked={filterAllergens.includes(a)}
                 onChange={() =>
                   setFilterAllergens((prev) =>
-                    prev.includes(a)
-                      ? prev.filter((x) => x !== a)
-                      : [...prev, a]
+                    prev.includes(a) ? prev.filter((x) => x !== a) : [...prev, a]
                   )
                 }
               />
@@ -212,34 +165,21 @@ export default function Home() {
                 checked={filterSeasons.includes(s)}
                 onChange={() =>
                   setFilterSeasons((prev) =>
-                    prev.includes(s)
-                      ? prev.filter((x) => x !== s)
-                      : [...prev, s]
+                    prev.includes(s) ? prev.filter((x) => x !== s) : [...prev, s]
                   )
                 }
               />
               <span className="capitalize">{s}</span>
             </label>
           ))}
-          {[
-            "vodka",
-            "gin",
-            "tequila",
-            "rum",
-            "whiskey",
-            "mezcal",
-            "brandy",
-            "liqueur",
-          ].map((l) => (
+          {["vodka", "gin", "tequila", "rum", "whiskey", "mezcal", "brandy", "liqueur"].map((l) => (
             <label key={l} className="flex items-center gap-1 text-sm">
               <input
                 type="checkbox"
                 checked={filterLiquorTypes.includes(l)}
                 onChange={() =>
                   setFilterLiquorTypes((prev) =>
-                    prev.includes(l)
-                      ? prev.filter((x) => x !== l)
-                      : [...prev, l]
+                    prev.includes(l) ? prev.filter((x) => x !== l) : [...prev, l]
                   )
                 }
               />
@@ -247,21 +187,18 @@ export default function Home() {
             </label>
           ))}
 
-          <Button
-            variant="outline"
-            onClick={() => {
-              setFilterSweetness("");
-              setFilterAllergens([]);
-              setFilterSeasons([]);
-              setFilterLiquorTypes([]);
-            }}
-          >
+          <Button variant="outline" onClick={() => {
+            setFilterSweetness("");
+            setFilterAllergens([]);
+            setFilterSeasons([]);
+            setFilterLiquorTypes([]);
+          }}>
             Clear Filters
           </Button>
         </div>
       )}
 
-      {/* Recipes and Batches List */}
+      {/* Recipes */}
       <div className="grid gap-4">
         {(showBatches ? filteredBatches : filteredRecipes).map((item, idx) => (
           <motion.div key={idx} initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
@@ -270,122 +207,69 @@ export default function Home() {
                 <h2 className="text-xl font-semibold mb-2">{item.name}</h2>
                 <p className="font-semibold">Ingredients:</p>
                 <ul className="list-disc list-inside mb-2">
-                  {item.ingredients?.map((ing, i) => (
-                    <li key={i}>{ing}</li>
-                  ))}
+                  {item.ingredients?.map((ing: string, i: number) => <li key={i}>{ing}</li>)}
                 </ul>
-                <p>
-                  <strong>Method:</strong> {item.method}
-                </p>
+                <p><strong>Method:</strong> {item.method}</p>
 
-{/* Garnish */}
-{((): React.ReactNode => {
-  if ("garnish" in item && item.garnish) {
-    return (
-      <p>
-        <strong>Garnish:</strong> {item.garnish}
-      </p>
-    );
-  }
-  return null;
-})()}
+                {/* Garnish */}
+                {item && "garnish" in item && item.garnish ? (
+                  <p><strong>Garnish:</strong> {item.garnish}</p>
+                ) : null}
 
                 {/* Allergens */}
-                {(() => {
-                  if ("allergens" in item && item.allergens?.length) {
-                    return (
-                      <div className="mt-4 text-sm text-red-600 flex flex-wrap gap-2">
-                        ⚠️ Contains:{" "}
-                        {item.allergens.map((a, i) => (
-                          <span key={i}>
-                            {a === "nuts"
-                              ? "🥜 Nuts"
-                              : a === "eggs"
-                              ? "🥚 Eggs"
-                              : a === "dairy"
-                              ? "🥛 Dairy"
-                              : "🌾 Gluten"}
-                          </span>
-                        ))}
-                      </div>
-                    );
-                  }
-                  return null;
-                })()}
+                {item && "allergens" in item && item.allergens?.length > 0 ? (
+                  <div className="mt-4 text-sm text-red-600 flex flex-wrap gap-2">
+                    ⚠️ Contains: {item.allergens.map((a: string, i: number) => (
+                      <span key={i}>
+                        {a === "nuts" ? "🥜 Nuts" : a === "eggs" ? "🥚 Eggs" : a === "dairy" ? "🥛 Dairy" : "🌾 Gluten"}
+                      </span>
+                    ))}
+                  </div>
+                ) : null}
 
                 {/* Sweetness */}
-                {(() => {
-                  if ("sweetness" in item && item.sweetness) {
-                    return (
-                      <div className="mt-8">
-                        <div className="relative w-full max-w-xs h-5 bg-gray-200 rounded-full">
-                          <div
-                            className="absolute text-2xl transition-all duration-300"
-                            style={{
-                              top: "-2rem",
-                              left:
-                                item.sweetness === "dry"
-                                  ? "7%"
-                                  : item.sweetness === "semi-dry"
-                                  ? "33%"
-                                  : item.sweetness === "balanced"
-                                  ? "66%"
-                                  : "93%",
-                              transform: "translateX(-50%)",
-                            }}
-                          >
-                            🍸
-                          </div>
-                          <div className="absolute top-6 w-full flex justify-between px-2 text-xs text-gray-500">
-                            <span>Dry</span>
-                            <span>Semi-Dry</span>
-                            <span>Balanced</span>
-                            <span>Sweet</span>
-                          </div>
-                        </div>
+                {item && "sweetness" in item && item.sweetness && (
+                  <div className="mt-8">
+                    <div className="relative w-full max-w-xs h-5 bg-gray-200 rounded-full">
+                      <div
+                        className="absolute text-2xl transition-all duration-300"
+                        style={{
+                          top: "-2rem",
+                          left:
+                            item.sweetness === "dry" ? "7%" :
+                            item.sweetness === "semi-dry" ? "33%" :
+                            item.sweetness === "balanced" ? "66%" :
+                            item.sweetness === "sweet" ? "93%" : "50%",
+                          transform: "translateX(-50%)",
+                        }}
+                      >
+                        🍸
                       </div>
-                    );
-                  }
-                  return null;
-                })()}
+                      <div className="absolute top-6 w-full flex justify-between px-2 text-xs text-gray-500">
+                        <span>Dry</span><span>Semi-Dry</span><span>Balanced</span><span>Sweet</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
 
                 {/* Seasons */}
-                {(() => {
-                  if ("seasons" in item && item.seasons?.length) {
-                    return (
-                      <div className="mt-9 text-sm text-blue-600 flex flex-wrap gap-2">
-                        🌿 Season:{" "}
-                        {item.seasons.map((s, i) => (
-                          <span key={i}>
-                            {s === "spring"
-                              ? "🌸 Spring"
-                              : s === "summer"
-                              ? "☀️ Summer"
-                              : s === "fall"
-                              ? "🍂 Fall"
-                              : "❄️ Winter"}
-                          </span>
-                        ))}
-                      </div>
-                    );
-                  }
-                  return null;
-                })()}
+                {item && "seasons" in item && item.seasons?.length > 0 ? (
+                  <div className="mt-9 text-sm text-blue-600 flex flex-wrap items-center gap-2">
+                    🌿 Season: {item.seasons.map((s: string, i: number) => (
+                      <span key={i}>
+                        {s === "spring" ? "🌸 Spring" : s === "summer" ? "☀️ Summer" : s === "fall" ? "🍂 Fall" : "❄️ Winter"}
+                      </span>
+                    ))}
+                  </div>
+                ) : null}
 
                 {/* Liquor Types */}
-                {(() => {
-                  if ("liquorTypes" in item && item.liquorTypes?.length) {
-                    return (
-                      <div className="mt-4 text-sm text-purple-600 flex items-center gap-2">
-                        🥃 <span className="font-semibold">Liquor:</span>{" "}
-                        {item.liquorTypes
-                          .map((l) => l.charAt(0).toUpperCase() + l.slice(1))
-                          .join(", ")}
-                      </div>
-                    );
-                  }
-                  return null;
-                })()}
+                {item && "liquorTypes" in item && item.liquorTypes?.length > 0 ? (
+                  <div className="mt-4 text-sm text-purple-600 flex items-center gap-2">
+                    🥃 <span className="font-semibold">Liquor:</span> {item.liquorTypes.map((l: string) => l.charAt(0).toUpperCase() + l.slice(1)).join(", ")}
+                  </div>
+                ) : null}
+
                 {/* Edit/Delete Dropdown */}
                 <div className="mt-4 flex justify-end">
                   <DropdownMenu>
@@ -400,7 +284,7 @@ export default function Home() {
                         onSelect={async () => {
                           const isAuthed = await checkPassword();
                           if (isAuthed) {
-                            setEditingRecipe(item as Cocktail);
+                            setEditingRecipe(item);
                             setShowAddModal(true);
                           }
                         }}
@@ -415,11 +299,7 @@ export default function Home() {
                           if (isAuthed) {
                             const confirmDelete = confirm(`Delete "${item.name}"?`);
                             if (confirmDelete) {
-                              const { error } = await supabase
-                                .from("cocktails")
-                                .delete()
-                                .eq("id", item.id);
-
+                              const { error } = await supabase.from("cocktails").delete().eq("id", item.id);
                               if (error) {
                                 console.error("❌ Error deleting cocktail:", error);
                                 toast.error("❌ Failed to delete cocktail!");
@@ -453,22 +333,13 @@ export default function Home() {
           onAdd={async (newRecipe) => {
             try {
               if (editingRecipe) {
-                const { error } = await supabase
-                  .from("cocktails")
-                  .update(newRecipe)
-                  .eq("id", editingRecipe.id);
+                const { error } = await supabase.from("cocktails").update(newRecipe).eq("id", editingRecipe.id);
                 if (error) throw error;
-
-                setRecipes((prev) =>
-                  prev.map((r) => (r.id === editingRecipe.id ? newRecipe : r))
-                );
+                setRecipes((prev) => prev.map((r) => (r.id === editingRecipe.id ? newRecipe : r)));
                 toast.success(`Updated "${newRecipe.name}" 🍸`);
               } else {
-                const { error } = await supabase
-                  .from("cocktails")
-                  .insert([newRecipe]);
+                const { error } = await supabase.from("cocktails").insert([newRecipe]);
                 if (error) throw error;
-
                 setRecipes((prev) => [...prev, newRecipe]);
                 toast.success(`Added "${newRecipe.name}" 🥂`);
               }
