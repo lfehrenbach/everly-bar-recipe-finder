@@ -109,41 +109,72 @@ export default function Home() {
         className="mb-6"
       />
 
-      {/* Filters */}
-      {!showBatches && showFilters && (
-        <div className="flex flex-wrap gap-2 sm:gap-4 mb-6 text-sm items-center border rounded p-4 bg-white shadow-sm overflow-x-auto">
-          <select className="border p-2 rounded" value={sortOption} onChange={(e) => setSortOption(e.target.value)}>
-            <option value="">Sort by...</option>
-            <option value="name-asc">Name A–Z</option>
-            <option value="name-desc">Name Z–A</option>
-            <option value="sweetness">Sweetness Level</option>
-            <option value="liquorForward">Strength</option>
-          </select>
-          <select className="border p-2 rounded" value={filterSweetness} onChange={(e) => setFilterSweetness(e.target.value)}>
-            <option value="">All Sweetness</option>
-            <option value="dry">Dry</option>
-            <option value="semi-dry">Semi-Dry</option>
-            <option value="balanced">Balanced</option>
-            <option value="sweet">Sweet</option>
-          </select>
-          {["nuts", "eggs", "dairy", "gluten"].map((a) => (
-            <label key={a} className="flex items-center gap-1 text-sm">
-              <input type="checkbox" checked={filterAllergens.includes(a)} onChange={() =>
-                setFilterAllergens((prev) => prev.includes(a) ? prev.filter(x => x !== a) : [...prev, a])
-              } />
-              <span className="capitalize">{a}</span>
-            </label>
-          ))}
-          <Button variant="outline" onClick={() => {
-            setFilterSweetness("");
-            setFilterAllergens([]);
-            setFilterSeasons([]);
-            setFilterLiquorTypes([]);
-          }}>
-            Clear Filters
-          </Button>
-        </div>
-      )}
+{/* Filters */}
+{!showBatches && showFilters && (
+  <div className="flex flex-wrap gap-2 sm:gap-4 mb-6 text-sm items-center border rounded p-4 bg-white shadow-sm overflow-x-auto">
+    {/* Sort Dropdown */}
+    <select className="border p-2 rounded" value={sortOption} onChange={(e) => setSortOption(e.target.value)}>
+      <option value="">Sort by...</option>
+      <option value="name-asc">Name A–Z</option>
+      <option value="name-desc">Name Z–A</option>
+      <option value="sweetness">Sweetness Level</option>
+      <option value="liquorForward">Strength</option>
+    </select>
+
+    {/* Sweetness Dropdown */}
+    <select className="border p-2 rounded" value={filterSweetness} onChange={(e) => setFilterSweetness(e.target.value)}>
+      <option value="">All Sweetness</option>
+      <option value="dry">Dry</option>
+      <option value="semi-dry">Semi-Dry</option>
+      <option value="balanced">Balanced</option>
+      <option value="sweet">Sweet</option>
+    </select>
+
+    {/* Allergens */}
+    {["nuts", "eggs", "dairy", "gluten"].map((a) => (
+      <label key={a} className="flex items-center gap-1 text-sm">
+        <input
+          type="checkbox"
+          checked={filterAllergens.includes(a)}
+          onChange={() =>
+            setFilterAllergens((prev) =>
+              prev.includes(a) ? prev.filter((x) => x !== a) : [...prev, a]
+            )
+          }
+        />
+        <span className="capitalize">{a}</span>
+      </label>
+    ))}
+
+    {/* 🌸 Seasons (NEW!) */}
+    {["spring", "summer", "fall", "winter"].map((season) => (
+      <label key={season} className="flex items-center gap-1 text-sm">
+        <input
+          type="checkbox"
+          checked={filterSeasons.includes(season)}
+          onChange={() =>
+            setFilterSeasons((prev) =>
+              prev.includes(season) ? prev.filter((s) => s !== season) : [...prev, season]
+            )
+          }
+        />
+        <span className="capitalize">{season}</span>
+      </label>
+    ))}
+
+    {/* Clear Filters Button */}
+    <Button variant="outline" onClick={() => {
+      setSortOption("");
+      setFilterSweetness("");
+      setFilterAllergens([]);
+      setFilterSeasons([]);
+      setFilterLiquorTypes([]);
+    }}>
+      Clear Filters
+    </Button>
+  </div>
+)}
+
 
       {/* Recipe Cards */}
       <div className="grid gap-4">
