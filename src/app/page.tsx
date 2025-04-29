@@ -35,6 +35,8 @@ export default function Home() {
   const [filterAllergens, setFilterAllergens] = useState<string[]>([]);
   const [filterSeasons, setFilterSeasons] = useState<string[]>([]);
   const [filterLiquorTypes, setFilterLiquorTypes] = useState<string[]>([]);
+const [darkMode, setDarkMode] = useState(false);
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -82,7 +84,8 @@ export default function Home() {
   );
 
   return (
-    <main className="p-4 sm:p-6 max-w-4xl mx-auto">
+    <main className={`${darkMode ? "dark" : ""}`}>
+  <div className="p-4 sm:p-6 max-w-4xl mx-auto bg-white dark:bg-gray-900 text-black dark:text-white min-h-screen">
       <Toaster richColors position="top-center" />
       <h1 className="text-2xl sm:text-3xl font-bold mb-4 text-center">Everly Bar Recipe Finder</h1>
 
@@ -98,6 +101,13 @@ export default function Home() {
           if (isAuthed) setShowAddModal(true);
           else alert("Incorrect password.");
         }}>➕ Add Cocktail</Button>
+<Button
+  variant="outline"
+  onClick={() => setDarkMode(prev => !prev)}
+>
+  {darkMode ? '🌞 Light Mode' : '🌙 Dark Mode'}
+</Button>
+
       </div>
 
       {/* Search */}
@@ -111,7 +121,7 @@ export default function Home() {
 
 {/* Filters */}
 {!showBatches && showFilters && (
-  <div className="flex flex-wrap gap-2 sm:gap-4 mb-6 text-sm items-center border rounded p-4 bg-white shadow-sm overflow-x-auto">
+  <div className="flex flex-wrap gap-2 sm:gap-4 mb-6 text-sm items-center border rounded p-4 bg-white dark:bg-gray-800 shadow-sm overflow-x-auto">
     {/* Sort Dropdown */}
     <select className="border p-2 rounded" value={sortOption} onChange={(e) => setSortOption(e.target.value)}>
       <option value="">Sort by...</option>
@@ -180,8 +190,9 @@ export default function Home() {
       <div className="grid gap-4">
         {(showBatches ? filteredBatches : filteredRecipes).map((item, idx) => (
           <motion.div key={idx} initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-            <Card>
-              <CardContent className="p-4 pb-2">
+<Card className="bg-white dark:bg-gray-800 text-black dark:text-white shadow-md">
+  <CardContent className="p-4 pb-2">
+
                 <h2 className="text-xl font-semibold mb-2">{item.name}</h2>
                 <p className="font-semibold">Ingredients:</p>
                 <ul className="list-disc list-inside mb-2">
