@@ -173,7 +173,7 @@ export default function Home() {
 
                 {/* Allergens */}
                 {(() => {
-                  if (!showBatches && isCocktail(item) && item.allergens?.length > 0) {
+                  if (!showBatches && isCocktail(item) && item.allergens && item.allergens.length > 0) {
                     return (
                       <div className="mt-4 text-sm text-red-600 flex flex-wrap gap-2">
                         ⚠️ Contains: {item.allergens.map((a, i) => (
@@ -208,7 +208,9 @@ export default function Home() {
                             🍸
                           </div>
                           <div className="absolute top-6 w-full flex justify-between px-2 text-xs text-gray-500">
-                            <span>Dry</span><span>Semi-Dry</span><span>Balanced</span><span>Sweet</span>
+                            <span>Dry</span><span>Semi-Dry</span><span>Balanced</span><
+::contentReference[oaicite:2]{index=2}
+                             <span>Dry</span><span>Semi-Dry</span><span>Balanced</span><span>Sweet</span>
                           </div>
                         </div>
                       </div>
@@ -230,6 +232,7 @@ export default function Home() {
                   return null;
                 })()}
 
+                {/* Edit/Delete */}
                 <div className="mt-4 flex justify-end">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -256,8 +259,9 @@ export default function Home() {
                             const confirmDelete = confirm(`Delete "${item.name}"?`);
                             if (confirmDelete) {
                               const { error } = await supabase.from("cocktails").delete().eq("id", item.id);
-                              if (error) toast.error("❌ Failed to delete cocktail!");
-                              else {
+                              if (error) {
+                                toast.error("❌ Failed to delete cocktail!");
+                              } else {
                                 setRecipes((prev) => prev.filter((r) => r.id !== item.id));
                                 toast.success(`Deleted "${item.name}" 🗑️`);
                               }
@@ -276,6 +280,7 @@ export default function Home() {
         ))}
       </div>
 
+      {/* Add/Edit Modal */}
       {showAddModal && (
         <AddCocktailModal
           initialData={editingRecipe}
@@ -310,3 +315,4 @@ export default function Home() {
     </main>
   );
 }
+
