@@ -59,24 +59,18 @@ export default function Home() {
   });
 
   const filteredRecipes = sortedRecipes.filter((recipe) => {
-    const matchesQuery =
-      recipe.name.toLowerCase().includes(query.toLowerCase()) ||
+    const matchesQuery = recipe.name.toLowerCase().includes(query.toLowerCase()) ||
       recipe.ingredients?.some((ing) => ing.toLowerCase().includes(query.toLowerCase()));
     const matchesSweetness = !filterSweetness || recipe.sweetness === filterSweetness;
-    const matchesAllergens =
-      filterAllergens.length === 0 || !recipe.allergens?.some((a) => filterAllergens.includes(a));
-    const matchesSeasons =
-      filterSeasons.length === 0 || recipe.seasons?.some((s) => filterSeasons.includes(s));
-    const matchesLiquorTypes =
-      filterLiquorTypes.length === 0 || recipe.liquorTypes?.some((l) => filterLiquorTypes.includes(l));
-
+    const matchesAllergens = filterAllergens.length === 0 || !recipe.allergens?.some((a) => filterAllergens.includes(a));
+    const matchesSeasons = filterSeasons.length === 0 || recipe.seasons?.some((s) => filterSeasons.includes(s));
+    const matchesLiquorTypes = filterLiquorTypes.length === 0 || recipe.liquorTypes?.some((t) => filterLiquorTypes.includes(t));
     return matchesQuery && matchesSweetness && matchesAllergens && matchesSeasons && matchesLiquorTypes;
   });
 
-  const filteredBatches = batches.filter(
-    (batch) =>
-      batch.name.toLowerCase().includes(query.toLowerCase()) ||
-      batch.ingredients?.some((ing) => ing.toLowerCase().includes(query.toLowerCase()))
+  const filteredBatches = batches.filter((batch) =>
+    batch.name.toLowerCase().includes(query.toLowerCase()) ||
+    batch.ingredients?.some((ing) => ing.toLowerCase().includes(query.toLowerCase()))
   );
 
   return (
@@ -92,7 +86,7 @@ export default function Home() {
         <Button variant={showBatches ? "default" : "outline"} onClick={() => setShowBatches(true)}>
           🧪 Batch & Prep
         </Button>
-        <Button variant="outline" className="hidden sm:inline-flex" onClick={() => setShowFilters(!showFilters)}>
+        <Button variant="outline" className="hidden sm:inline-flex" onClick={() => setShowFilters((prev) => !prev)}>
           {showFilters ? "Hide Filters" : "Show Filters"}
         </Button>
         <Button
@@ -118,7 +112,6 @@ export default function Home() {
       {/* Filters */}
       {!showBatches && showFilters && (
         <div className="flex flex-wrap gap-2 sm:gap-4 mb-6 text-sm items-center border rounded p-4 bg-white shadow-sm overflow-x-auto">
-          {/* Sort Dropdown */}
           <select className="border p-2 rounded" value={sortOption} onChange={(e) => setSortOption(e.target.value)}>
             <option value="">Sort by...</option>
             <option value="name-asc">Name A–Z</option>
@@ -127,7 +120,6 @@ export default function Home() {
             <option value="liquorForward">Strength</option>
           </select>
 
-          {/* Sweetness Filter */}
           <select className="border p-2 rounded" value={filterSweetness} onChange={(e) => setFilterSweetness(e.target.value)}>
             <option value="">All Sweetness</option>
             <option value="dry">Dry</option>
@@ -136,69 +128,57 @@ export default function Home() {
             <option value="sweet">Sweet</option>
           </select>
 
-          {/* Allergen Filters */}
-          {["nuts", "eggs", "dairy", "gluten"].map((allergen) => (
-            <label key={allergen} className="flex items-center gap-1">
+          {["nuts", "eggs", "dairy", "gluten"].map((a) => (
+            <label key={a} className="flex items-center gap-1 text-sm">
               <input
                 type="checkbox"
-                checked={filterAllergens.includes(allergen)}
-                onChange={() =>
-                  setFilterAllergens((prev) =>
-                    prev.includes(allergen) ? prev.filter((a) => a !== allergen) : [...prev, allergen]
-                  )
-                }
+                checked={filterAllergens.includes(a)}
+                onChange={() => setFilterAllergens((prev) =>
+                  prev.includes(a) ? prev.filter((x) => x !== a) : [...prev, a]
+                )}
               />
-              <span className="capitalize">{allergen}</span>
+              <span className="capitalize">{a}</span>
             </label>
           ))}
 
-          {/* Season Filters */}
-          {["spring", "summer", "fall", "winter"].map((season) => (
-            <label key={season} className="flex items-center gap-1">
+          {["spring", "summer", "fall", "winter"].map((s) => (
+            <label key={s} className="flex items-center gap-1 text-sm">
               <input
                 type="checkbox"
-                checked={filterSeasons.includes(season)}
-                onChange={() =>
-                  setFilterSeasons((prev) =>
-                    prev.includes(season) ? prev.filter((s) => s !== season) : [...prev, season]
-                  )
-                }
+                checked={filterSeasons.includes(s)}
+                onChange={() => setFilterSeasons((prev) =>
+                  prev.includes(s) ? prev.filter((x) => x !== s) : [...prev, s]
+                )}
               />
-              <span className="capitalize">{season}</span>
+              <span className="capitalize">{s}</span>
             </label>
           ))}
 
-          {/* Liquor Type Filters */}
-          {["vodka", "gin", "tequila", "rum", "whiskey", "mezcal", "brandy", "liqueur"].map((type) => (
-            <label key={type} className="flex items-center gap-1">
+          {["vodka", "gin", "tequila", "rum", "whiskey", "mezcal", "brandy", "liqueur"].map((l) => (
+            <label key={l} className="flex items-center gap-1 text-sm">
               <input
                 type="checkbox"
-                checked={filterLiquorTypes.includes(type)}
-                onChange={() =>
-                  setFilterLiquorTypes((prev) =>
-                    prev.includes(type) ? prev.filter((l) => l !== type) : [...prev, type]
-                  )
-                }
+                checked={filterLiquorTypes.includes(l)}
+                onChange={() => setFilterLiquorTypes((prev) =>
+                  prev.includes(l) ? prev.filter((x) => x !== l) : [...prev, l]
+                )}
               />
-              <span className="capitalize">{type}</span>
+              <span className="capitalize">{l}</span>
             </label>
           ))}
 
-          <Button
-            variant="outline"
-            onClick={() => {
-              setFilterSweetness("");
-              setFilterAllergens([]);
-              setFilterSeasons([]);
-              setFilterLiquorTypes([]);
-            }}
-          >
+          <Button variant="outline" onClick={() => {
+            setFilterSweetness("");
+            setFilterAllergens([]);
+            setFilterSeasons([]);
+            setFilterLiquorTypes([]);
+          }}>
             Clear Filters
           </Button>
         </div>
       )}
 
-      {/* Cocktail or Batch List */}
+      {/* Recipe and Batch list */}
       <div className="grid gap-4">
         {(showBatches ? filteredBatches : filteredRecipes).map((item, idx) => (
           <motion.div key={idx} initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
@@ -211,10 +191,10 @@ export default function Home() {
                 </ul>
                 <p><strong>Method:</strong> {item.method}</p>
 
-                {/* Only cocktails have these: */}
                 {"garnish" in item && (item as Cocktail).garnish && (
                   <p><strong>Garnish:</strong> {(item as Cocktail).garnish}</p>
                 )}
+
                 {"allergens" in item && (item as Cocktail).allergens?.length > 0 && (
                   <div className="mt-4 text-sm text-red-600 flex flex-wrap gap-2">
                     ⚠️ Contains: {(item as Cocktail).allergens.map((a, i) => (
@@ -224,6 +204,7 @@ export default function Home() {
                     ))}
                   </div>
                 )}
+
                 {"sweetness" in item && item.sweetness && (
                   <div className="mt-8">
                     <div className="relative w-full max-w-xs h-5 bg-gray-200 rounded-full">
@@ -231,11 +212,10 @@ export default function Home() {
                         className="absolute text-2xl transition-all duration-300"
                         style={{
                           top: "-2rem",
-                          left:
-                            item.sweetness === "dry" ? "7%" :
-                            item.sweetness === "semi-dry" ? "33%" :
-                            item.sweetness === "balanced" ? "66%" :
-                            item.sweetness === "sweet" ? "93%" : "50%",
+                          left: item.sweetness === "dry" ? "7%" :
+                                item.sweetness === "semi-dry" ? "33%" :
+                                item.sweetness === "balanced" ? "66%" :
+                                item.sweetness === "sweet" ? "93%" : "50%",
                           transform: "translateX(-50%)",
                         }}
                       >
@@ -247,23 +227,25 @@ export default function Home() {
                     </div>
                   </div>
                 )}
+
                 {"seasons" in item && item.seasons?.length > 0 && (
                   <div className="mt-9 text-sm text-blue-600 flex flex-wrap items-center gap-2">
-                    🌿 Season: {item.seasons.map((s, i) => (
+                    🌿 Season: {(item as Cocktail).seasons.map((s, i) => (
                       <span key={i}>
                         {s === "spring" ? "🌸 Spring" : s === "summer" ? "☀️ Summer" : s === "fall" ? "🍂 Fall" : "❄️ Winter"}
                       </span>
                     ))}
                   </div>
                 )}
+
                 {"liquorTypes" in item && item.liquorTypes?.length > 0 && (
                   <div className="mt-4 text-sm text-purple-600 flex items-center gap-2">
                     🥃 <span className="font-semibold">Liquor:</span>{" "}
-                    {(item as Cocktail).liquorTypes.join(", ")}
+                    {(item as Cocktail).liquorTypes.map((l) => l.charAt(0).toUpperCase() + l.slice(1)).join(", ")}
                   </div>
                 )}
 
-                {/* Edit/Delete */}
+                {/* Edit/Delete Menu */}
                 <div className="mt-4 flex justify-end">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -297,7 +279,7 @@ export default function Home() {
                                 console.error("❌ Error deleting cocktail:", error);
                                 toast.error("❌ Failed to delete cocktail!");
                               } else {
-                                setRecipes(prev => prev.filter(r => r.id !== item.id));
+                                setRecipes((prev) => prev.filter((r) => r.id !== item.id));
                                 toast.success(`Deleted "${item.name}" 🗑️`);
                               }
                             }
@@ -331,17 +313,18 @@ export default function Home() {
                   .update(newRecipe)
                   .eq("id", editingRecipe.id);
                 if (error) throw error;
-                setRecipes(prev => prev.map(r => (r.id === editingRecipe.id ? newRecipe : r)));
+                setRecipes((prev) => prev.map((r) => (r.id === editingRecipe.id ? newRecipe : r)));
                 toast.success(`Updated "${newRecipe.name}" 🍸`);
               } else {
                 const { error } = await supabase.from("cocktails").insert([newRecipe]);
                 if (error) throw error;
-                setRecipes(prev => [...prev, newRecipe]);
+                setRecipes((prev) => [...prev, newRecipe]);
                 toast.success(`Added "${newRecipe.name}" 🥂`);
               }
             } catch (error) {
-              console.error("❌ Error saving cocktail:", error);
-              toast.error("❌ Failed to save cocktail!");
+              const message = error instanceof Error ? error.message : JSON.stringify(error);
+              console.error("❌ Error saving cocktail:", message);
+              toast.error(`❌ Failed to save cocktail: ${message}`);
             } finally {
               setShowAddModal(false);
               setEditingRecipe(null);
@@ -352,5 +335,3 @@ export default function Home() {
     </main>
   );
 }
-
-
