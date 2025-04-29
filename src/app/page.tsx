@@ -213,29 +213,38 @@ const [editingRecipe, setEditingRecipe] = useState<Cocktail | null>(null);
                   {item.ingredients?.map((ing: string, i: number) => <li key={i}>{ing}</li>)}
                 </ul>
                 <p><strong>Method:</strong> {item.method}</p>
-{("garnish" in item && (item as Cocktail).garnish) && (
-  <p><strong>Garnish:</strong> {(item as Cocktail).garnish}</p>
-)}
+{(() => {
+  if ("garnish" in item && (item as Cocktail).garnish) {
+    return (
+      <p><strong>Garnish:</strong> {(item as Cocktail).garnish}</p>
+    );
+  }
+  return null;
+})()}
+
 
 
 
 
 
 {/* Allergens */}
-{ "allergens" in item && (item as Cocktail).allergens?.length > 0 && (
-  <>
-    <div className="mt-4 text-sm text-red-600 flex flex-wrap gap-2">
-      ⚠️ Contains: {(item as Cocktail).allergens.map((a: string, i: number) => (
-        <span key={i}>
-          {a === "nuts" ? "🥜 Nuts" :
-           a === "eggs" ? "🥚 Eggs" :
-           a === "dairy" ? "🥛 Dairy" :
-           "🌾 Gluten"}
-        </span>
-      ))}
-    </div>
-  </>
-)}
+{(() => {
+  if ("allergens" in item && (item as Cocktail).allergens?.length > 0) {
+    return (
+      <div className="mt-4 text-sm text-red-600 flex flex-wrap gap-2">
+        ⚠️ Contains: {(item as Cocktail).allergens.map((a: string, i: number) => (
+          <span key={i}>
+            {a === "nuts" ? "🥜 Nuts" :
+             a === "eggs" ? "🥚 Eggs" :
+             a === "dairy" ? "🥛 Dairy" :
+             "🌾 Gluten"}
+          </span>
+        ))}
+      </div>
+    );
+  }
+  return null;
+})()}
 
 
 {/* Sweetness Scale */}
