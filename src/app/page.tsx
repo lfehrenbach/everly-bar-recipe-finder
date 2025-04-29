@@ -76,8 +76,7 @@ export default function Home() {
 const filteredBatches = batches.filter(
   (batch) =>
     batch.name.toLowerCase().includes(query.toLowerCase()) ||
-    batch.ingredients?.some((ing) => ing.toLowerCase().includes(query.toLowerCase()))
-);
+    batch.ingredients?.some((ing) => ing.toLowerCase().includes(query.toLowerCase())));
 
   return (
     <main className={darkMode ? "dark" : ""}>
