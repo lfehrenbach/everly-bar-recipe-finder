@@ -328,28 +328,37 @@ export default function Home() {
       setShowAddModal(false);
       setEditingRecipe(null);
     }}
-    onAdd={async (newRecipe) => {
-      try {
-        if (editingRecipe) {
-          const { error } = await supabase.from("cocktails").update(newRecipe).eq("id", editingRecipe.id);
-          if (error) throw error;
-          setRecipes((prev) => prev.map((r) => (r.id === editingRecipe.id ? newRecipe : r)));
-          toast.success(`Updated "${newRecipe.name}" 🍸`);
-        } else {
-          const { error } = await supabase.from("cocktails").insert([newRecipe]);
-          if (error) throw error;
-          setRecipes((prev) => [...prev, newRecipe]);
-          toast.success(`Added "${newRecipe.name}" 🥂`);
-        }
-      } catch (error) {
-        const message = error instanceof Error ? error.message : JSON.stringify(error);
-        console.error("❌ Error saving cocktail:", message);
-        toast.error(`❌ Failed to save cocktail: ${message}`);
-      } finally {
-        setShowAddModal(false);
-        setEditingRecipe(null);
-      }
-    }}
+onAdd={async (newRecipe) => {
+  try {
+    if (editingRecipe) {
+      const { error } = await supabase
+        .from("cocktails")
+        .update(newRecipe)
+        .eq("id", editingRecipe.id);
+      if (error) throw error;
+      setRecipes((prev) =>
+        prev.map((r) => (r.id === editingRecipe.id ? newRecipe : r))
+      );
+      toast.success(`Updated "${newRecipe.name}" 🍸`);
+    } else {
+      const { id, ...newRecipeWithoutId } = newRecipe;
+      const { error } = await supabase
+        .from("cocktails")
+        .insert([newRecipeWithoutId]);
+      if (error) throw error;
+      setRecipes((prev) => [...prev, newRecipeWithoutId]);
+      toast.success(`Added "${newRecipe.name}" 🥂`);
+    }
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : JSON.stringify(error);
+    console.error("❌ Error saving cocktail:", message);
+    toast.error(`❌ Failed to save cocktail: ${message}`);
+  } finally {
+    setShowAddModal(false);
+    setEditingRecipe(null);
+  }
+}}
   />
 )}
     </main>
