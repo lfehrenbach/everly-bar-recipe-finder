@@ -255,6 +255,23 @@ export default function Home() {
                   }
                   return null;
                 })()}
+{/* Seasons */}
+{(() => {
+  if (!showBatches && isCocktail(item) && item.seasons?.length) {
+    return (
+      <div className="mt-4 text-sm text-blue-600 flex flex-wrap items-center gap-2">
+        🌿 Season:{" "}
+        {item.seasons.map((s, i) => (
+          <span key={i}>
+            {s === "spring" ? "🌸 Spring" : s === "summer" ? "☀️ Summer" : s === "fall" ? "🍂 Fall" : "❄️ Winter"}
+          </span>
+        ))}
+      </div>
+    );
+  }
+  return null;
+})()}
+
 
                 {/* Edit/Delete */}
                 <div className="mt-4 flex justify-end">
