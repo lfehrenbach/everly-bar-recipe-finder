@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Dialog } from "@headlessui/react";
 import { Button } from "@/components/ui/button";
 
-interface Recipe {
+import { Cocktail } from "@/types";
   name: string;
   ingredients: string[];
   method: string;
@@ -22,10 +22,10 @@ export default function AddCocktailModal({
   initialData,
 }: {
   onClose: () => void;
-  onAdd: (recipe: Recipe) => void;
-  initialData?: Recipe;
+onAdd: (recipe: Cocktail) => void;
+initialData?: Cocktail;
 }) {
-  const [form, setForm] = useState<Recipe>(
+  const [form, setForm] = useState<Cocktail>(
     initialData ?? {
       name: "",
       ingredients: [],
