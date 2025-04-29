@@ -343,8 +343,7 @@ onAdd={async (newRecipe) => {
       );
       toast.success(`Updated "${newRecipe.name}" 🍸`);
     } else {
-      const newRecipeCopy = { ...newRecipe };
-      // Simpler but retains the key with undefined value
+
 const newRecipeCopy = { ...newRecipe, id: undefined };
 
 
