@@ -96,17 +96,20 @@ const [form, setForm] = useState<Cocktail>(
           onChange={(e) => updateField("garnish", e.target.value)}
         />
 
-        <select
-          className="border p-2 rounded w-full"
-          value={form.sweetness ?? ""}
-          onChange={(e) => updateField("sweetness", e.target.value || undefined)}
-        >
-          <option value="">Select Sweetness</option>
-          <option value="dry">Dry</option>
-          <option value="semi-dry">Semi-Dry</option>
-          <option value="balanced">Balanced</option>
-          <option value="sweet">Sweet</option>
-        </select>
+<select
+  className="border p-2 rounded w-full"
+  value={form.sweetness ?? ""}
+  onChange={(e) => {
+    const val = e.target.value as "dry" | "semi-dry" | "balanced" | "sweet" | "";
+    updateField("sweetness", val === "" ? undefined : val);
+  }}
+>
+  <option value="">Select Sweetness</option>
+  <option value="dry">Dry</option>
+  <option value="semi-dry">Semi-Dry</option>
+  <option value="balanced">Balanced</option>
+  <option value="sweet">Sweet</option>
+</select>
 
         <label className="flex items-center gap-2">
           <input
