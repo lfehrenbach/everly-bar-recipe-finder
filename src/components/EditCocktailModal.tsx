@@ -1,10 +1,10 @@
 "use client";
 
+import { Cocktail } from "@/types";
 import { useState, useEffect } from "react";
 import { Dialog } from "@headlessui/react";
 import { Button } from "@/components/ui/button";
 
-import type { Recipe } from "@/types";
 
 export default function EditCocktailModal({
   onClose,
@@ -12,28 +12,29 @@ export default function EditCocktailModal({
   recipeToEdit,
 }: {
   onClose: () => void;
-  onEdit: (updated: Recipe) => void;
-  recipeToEdit: Recipe;
+  onEdit: (updated: Cocktail) => void;
+  recipeToEdit: Cocktail;
 }) {
-  const [form, setForm] = useState<Recipe>(recipeToEdit);
+  const [form, setForm] = useState<Cocktail>(recipeToEdit);
 
   useEffect(() => {
     setForm(recipeToEdit);
   }, [recipeToEdit]);
 
-  const updateField = (field: keyof Recipe, value: any) => {
-    setForm((prev) => ({ ...prev, [field]: value }));
-  };
+const updateField = (field: keyof Cocktail, value: any) => {
+  setForm((prev) => ({ ...prev, [field]: value }));
+};
 
-  const toggleArrayField = (field: keyof Recipe, value: string) => {
-    setForm((prev) => {
-      const list = prev[field] as string[] | undefined;
-      if (!list) return { ...prev, [field]: [value] };
-      return list.includes(value)
-        ? { ...prev, [field]: list.filter((v) => v !== value) }
-        : { ...prev, [field]: [...list, value] };
-    });
-  };
+const toggleArrayField = (field: keyof Cocktail, value: string) => {
+  setForm((prev) => {
+    const list = prev[field] as string[] | undefined;
+    if (!list) return { ...prev, [field]: [value] };
+    return list.includes(value)
+      ? { ...prev, [field]: list.filter((v) => v !== value) }
+      : { ...prev, [field]: [...list, value] };
+  });
+};
+
 
   const handleSubmit = () => {
     if (!form.name || !form.method || form.ingredients.length === 0) return;
