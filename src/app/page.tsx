@@ -83,9 +83,9 @@ const [darkMode, setDarkMode] = useState(false);
       batch.ingredients?.some((ing) => ing.toLowerCase().includes(query.toLowerCase()))
   );
 
-  return (
-    <main className={`${darkMode ? "dark" : ""}`}>
-  <div className="p-4 sm:p-6 max-w-4xl mx-auto bg-white dark:bg-gray-900 text-black dark:text-white min-h-screen">
+return (
+  <main className={`${darkMode ? "dark" : ""}`}>
+    <div className="p-4 sm:p-6 max-w-4xl mx-auto bg-white dark:bg-gray-900 text-black dark:text-white min-h-screen">
       <Toaster richColors position="top-center" />
       <h1 className="text-2xl sm:text-3xl font-bold mb-4 text-center">Everly Bar Recipe Finder</h1>
 
@@ -101,14 +101,13 @@ const [darkMode, setDarkMode] = useState(false);
           if (isAuthed) setShowAddModal(true);
           else alert("Incorrect password.");
         }}>➕ Add Cocktail</Button>
-<Button
-  variant="outline"
-  onClick={() => setDarkMode(prev => !prev)}
->
-  {darkMode ? '🌞 Light Mode' : '🌙 Dark Mode'}
-</Button>
-
+        <Button variant="outline" onClick={() => setDarkMode(prev => !prev)}>
+          {darkMode ? '🌞 Light Mode' : '🌙 Dark Mode'}
+        </Button>
       </div>
+    </div>
+  </main>
+);
 
       {/* Search */}
       <Input
