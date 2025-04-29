@@ -344,7 +344,9 @@ onAdd={async (newRecipe) => {
       toast.success(`Updated "${newRecipe.name}" 🍸`);
     } else {
 
-const { id: _id, ...newRecipeCopy } = newRecipe;
+const newRecipeCopy = { ...newRecipe };
+delete newRecipeCopy.id;
+
 
 
 
