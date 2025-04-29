@@ -125,7 +125,6 @@ export default function Home() {
       {/* Filters */}
       {!showBatches && showFilters && (
         <div className="flex flex-wrap gap-2 sm:gap-4 mb-6 text-sm items-center border rounded p-4 bg-white shadow-sm overflow-x-auto">
-          {/* Sorting Dropdown */}
           <select className="border p-2 rounded" value={sortOption} onChange={(e) => setSortOption(e.target.value)}>
             <option value="">Sort by...</option>
             <option value="name-asc">Name A–Z</option>
@@ -134,7 +133,6 @@ export default function Home() {
             <option value="liquorForward">Strength</option>
           </select>
 
-          {/* Sweetness Filter */}
           <select className="border p-2 rounded" value={filterSweetness} onChange={(e) => setFilterSweetness(e.target.value)}>
             <option value="">All Sweetness</option>
             <option value="dry">Dry</option>
@@ -143,7 +141,6 @@ export default function Home() {
             <option value="sweet">Sweet</option>
           </select>
 
-          {/* Filters (Allergens, Seasons, LiquorTypes) */}
           {["nuts", "eggs", "dairy", "gluten"].map((a) => (
             <label key={a} className="flex items-center gap-1 text-sm">
               <input
@@ -213,29 +210,30 @@ export default function Home() {
                 </ul>
                 <p><strong>Method:</strong> {item.method}</p>
 
-                {/* Garnish */}
                 {"garnish" in item && (item as Cocktail).garnish && (
                   <p><strong>Garnish:</strong> {(item as Cocktail).garnish}</p>
                 )}
 
-                {/* Allergens */}
-                {"allergens" in item && (() => {
-                  const cocktail = item as Cocktail;
-                  if (cocktail.allergens && cocktail.allergens.length > 0) {
-                    return (
-                      <div className="mt-4 text-sm text-red-600 flex flex-wrap gap-2">
-                        ⚠️ Contains: {cocktail.allergens.map((a, i) => (
-                          <span key={i}>
-                            {a === "nuts" ? "🥜 Nuts" : a === "eggs" ? "🥚 Eggs" : a === "dairy" ? "🥛 Dairy" : "🌾 Gluten"}
-                          </span>
-                        ))}
-                      </div>
-                    );
-                  }
-                  return null;
-                })()}
+                {"allergens" in item && (
+                  <>
+                    {(() => {
+                      const cocktail = item as Cocktail;
+                      if (cocktail.allergens && cocktail.allergens.length > 0) {
+                        return (
+                          <div className="mt-4 text-sm text-red-600 flex flex-wrap gap-2">
+                            ⚠️ Contains: {cocktail.allergens.map((a, i) => (
+                              <span key={i}>
+                                {a === "nuts" ? "🥜 Nuts" : a === "eggs" ? "🥚 Eggs" : a === "dairy" ? "🥛 Dairy" : "🌾 Gluten"}
+                              </span>
+                            ))}
+                          </div>
+                        );
+                      }
+                      return null;
+                    })()}
+                  </>
+                )}
 
-                {/* Sweetness Scale */}
                 {"sweetness" in item && item.sweetness && (
                   <div className="mt-8">
                     <div className="relative w-full max-w-xs h-5 bg-gray-200 rounded-full">
@@ -260,21 +258,16 @@ export default function Home() {
                   </div>
                 )}
 
-                {/* Seasons */}
                 {"seasons" in item && item.seasons?.length > 0 && (
                   <div className="mt-9 text-sm text-blue-600 flex flex-wrap items-center gap-2">
                     🌿 Season: {item.seasons.map((s: string, i: number) => (
                       <span key={i}>
-                        {s === "spring" ? "🌸 Spring" :
-                         s === "summer" ? "☀️ Summer" :
-                         s === "fall" ? "🍂 Fall" :
-                         "❄️ Winter"}
+                        {s === "spring" ? "🌸 Spring" : s === "summer" ? "☀️ Summer" : s === "fall" ? "🍂 Fall" : "❄️ Winter"}
                       </span>
                     ))}
                   </div>
                 )}
 
-                {/* Liquor Types */}
                 {"liquorTypes" in item && item.liquorTypes?.length > 0 && (
                   <div className="mt-4 text-sm text-purple-600 flex items-center gap-2">
                     🥃 <span className="font-semibold">Liquor:</span>{" "}
@@ -282,7 +275,6 @@ export default function Home() {
                   </div>
                 )}
 
-                {/* Edit/Delete */}
                 <div className="mt-4 flex justify-end">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -332,7 +324,6 @@ export default function Home() {
         ))}
       </div>
 
-      {/* Modal */}
       {showAddModal && (
         <AddCocktailModal
           initialData={editingRecipe}
@@ -343,13 +334,20 @@ export default function Home() {
           onAdd={async (newRecipe) => {
             try {
               if (editingRecipe) {
-                const { error } = await supabase.from("cocktails").update(newRecipe).eq("id", editingRecipe.id);
+                const { error } = await supabase
+                  .from("cocktails")
+                  .update(newRecipe)
+                  .eq("id", editingRecipe.id);
                 if (error) throw error;
-                setRecipes((prev) => prev.map((r) => (r.id === editingRecipe.id ? newRecipe : r)));
+
+                setRecipes((prev) =>
+                  prev.map((r) => (r.id === editingRecipe.id ? newRecipe : r))
+                );
                 toast.success(`Updated "${newRecipe.name}" 🍸`);
               } else {
                 const { error } = await supabase.from("cocktails").insert([newRecipe]);
                 if (error) throw error;
+
                 setRecipes((prev) => [...prev, newRecipe]);
                 toast.success(`Added "${newRecipe.name}" 🥂`);
               }
