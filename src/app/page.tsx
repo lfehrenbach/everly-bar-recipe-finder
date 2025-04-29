@@ -73,11 +73,11 @@ export default function Home() {
       filterLiquorTypes.length === 0 || recipe.liquorTypes?.some((t) => filterLiquorTypes.includes(t));
     return matchesQuery && matchesSweetness && matchesAllergens && matchesSeasons && matchesLiquorTypes;
   });
-
-  const filteredBatches = batches.filter(
-    (batch) =>
-      batch.name.toLowerCase().includes(query.toLowerCase()) ||
-      batch.ingredients?.some((ing) => ing.toLowerCase().includes(query.toLowerCase()))
+const filteredBatches = batches.filter(
+  (batch) =>
+    batch.name.toLowerCase().includes(query.toLowerCase()) ||
+    batch.ingredients?.some((ing) => ing.toLowerCase().includes(query.toLowerCase()))
+);
 
   return (
     <main className={darkMode ? "dark" : ""}>
