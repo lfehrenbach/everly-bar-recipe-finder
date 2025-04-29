@@ -222,9 +222,9 @@ const [editingRecipe, setEditingRecipe] = useState<Cocktail | null>(null);
 
 
 {/* Allergens */}
-{item.allergens?.length > 0 && (
+{"allergens" in item && (item as Cocktail).allergens?.length > 0 && (
   <div className="mt-4 text-sm text-red-600 flex flex-wrap gap-2">
-    ⚠️ Contains: {item.allergens.map((a: string, i: number) => (
+    ⚠️ Contains: {(item as Cocktail).allergens.map((a: string, i: number) => (
       <span key={i}>
         {a === "nuts" ? "🥜 Nuts" :
          a === "eggs" ? "🥚 Eggs" :
@@ -235,8 +235,9 @@ const [editingRecipe, setEditingRecipe] = useState<Cocktail | null>(null);
   </div>
 )}
 
+
 {/* Sweetness Scale */}
-{item.sweetness && (
+{"sweetness" in item && item.sweetness && (
   <div className="mt-8">
     <div className="relative w-full max-w-xs h-5 bg-gray-200 rounded-full">
       <div
@@ -261,7 +262,7 @@ const [editingRecipe, setEditingRecipe] = useState<Cocktail | null>(null);
 )}
 
 {/* Seasons */}
-{item.seasons?.length > 0 && (
+{"seasons" in item && item.seasons?.length > 0 && (
   <div className="mt-9 text-sm text-blue-600 flex flex-wrap items-center gap-2">
     🌿 Season: {item.seasons.map((s: string, i: number) => (
       <span key={i}>
@@ -274,13 +275,14 @@ const [editingRecipe, setEditingRecipe] = useState<Cocktail | null>(null);
   </div>
 )}
 
-{/* Liquor Types */}
-{item.liquorTypes?.length > 0 && (
+
+{"liquorTypes" in item && item.liquorTypes?.length > 0 && (
   <div className="mt-4 text-sm text-purple-600 flex items-center gap-2">
     🥃 <span className="font-semibold">Liquor:</span>{" "}
     {item.liquorTypes.map((l: string) => l.charAt(0).toUpperCase() + l.slice(1)).join(", ")}
   </div>
 )}
+
 
                 {/* Sweetness Scale, LiquorTypes, Allergens, Seasons (optional sections) */}
                 {/* ... */}
