@@ -17,7 +17,7 @@ export default function AddCocktailModal({
 }) {
 const [form, setForm] = useState<Cocktail>(
   initialData ?? {
-    id: "",  // <-- ADD THIS
+    id: 0,  // <-- set id to 0 (a number!)
     name: "",
     ingredients: [],
     method: "",
@@ -29,7 +29,6 @@ const [form, setForm] = useState<Cocktail>(
     liquorTypes: [],
   }
 );
-
 
   const updateField = <K extends keyof Cocktail>(field: K, value: Cocktail[K]) => {
   setForm((prev) => ({ ...prev, [field]: value }));
