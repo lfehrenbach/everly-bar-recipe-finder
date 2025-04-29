@@ -186,7 +186,7 @@ export default function Home() {
                 {(() => {
                   if (!showBatches && isCocktail(item) && item.sweetness) {
                     return (
-                      <div className="mt-8">
+                      <div className="mt-9">
                         <div className="relative w-full max-w-xs h-5 bg-gray-200 rounded-full">
                           <div
                             className="absolute text-2xl transition-all duration-300"
@@ -216,7 +216,7 @@ export default function Home() {
                 {(() => {
                   if (!showBatches && isCocktail(item) && item.liquorTypes?.length) {
                     return (
-                      <div className="mt-4 text-sm text-purple-600 flex items-center gap-2">
+                      <div className="mt-8 text-sm text-purple-600 flex items-center gap-2">
                         🥃 <span className="font-semibold">Liquor:</span>{" "}
                         {item.liquorTypes.map((l) => l.charAt(0).toUpperCase() + l.slice(1)).join(", ")}
                       </div>
