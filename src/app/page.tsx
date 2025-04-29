@@ -212,9 +212,11 @@ export default function Home() {
                 <p><strong>Method:</strong> {item.method}</p>
 
                 {/* Garnish */}
-                {item && "garnish" in item && item.garnish ? (
-                  <p><strong>Garnish:</strong> {item.garnish}</p>
-                ) : null}
+{item && "garnish" in item && item.garnish && (
+  <p>
+    <strong>Garnish:</strong> {item.garnish}
+  </p>
+)}
 
                 {/* Allergens */}
                 {item && "allergens" in item && item.allergens?.length > 0 ? (
