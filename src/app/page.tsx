@@ -104,10 +104,6 @@ return (
         <Button variant="outline" onClick={() => setDarkMode(prev => !prev)}>
           {darkMode ? '🌞 Light Mode' : '🌙 Dark Mode'}
         </Button>
-      </div>
-    </div>
-  </main>
-);
 
       {/* Search */}
       <Input
@@ -338,48 +334,48 @@ return (
       setShowAddModal(false);
       setEditingRecipe(null);
     }}
-onAdd={async (newRecipe) => {
-  try {
-    if (editingRecipe) {
-      const { error } = await supabase
-        .from("cocktails")
-        .update(newRecipe)
-        .eq("id", editingRecipe.id);
+    onAdd={async (newRecipe) => {
+      try {
+        if (editingRecipe) {
+          const { error } = await supabase
+            .from("cocktails")
+            .update(newRecipe)
+            .eq("id", editingRecipe.id);
 
-      if (error) throw error;
+          if (error) throw error;
 
-      setRecipes((prev) =>
-        prev.map((r) => (r.id === editingRecipe.id ? newRecipe : r))
-      );
-      toast.success(`Updated "${newRecipe.name}" 🍸`);
-    } else {
-      const newRecipeCopy = { ...newRecipe };
-      Reflect.deleteProperty(newRecipeCopy, "id");
+          setRecipes((prev) =>
+            prev.map((r) => (r.id === editingRecipe.id ? newRecipe : r))
+          );
+          toast.success(`Updated "${newRecipe.name}" 🍸`);
+        } else {
+          const newRecipeCopy = { ...newRecipe };
+          Reflect.deleteProperty(newRecipeCopy, "id");
 
-      const { data, error } = await supabase
-        .from("cocktails")
-        .insert([newRecipeCopy])
-        .select()
-        .single();
+          const { data, error } = await supabase
+            .from("cocktails")
+            .insert([newRecipeCopy])
+            .select()
+            .single();
 
-      if (error) throw error;
+          if (error) throw error;
 
-      setRecipes((prev) => [...prev, data]);
-      toast.success(`Added "${newRecipe.name}" 🥂`);
-    }
-  } catch (error) {
-    const message =
-      error instanceof Error ? error.message : JSON.stringify(error);
-    console.error("❌ Error saving cocktail:", message);
-    toast.error(`❌ Failed to save cocktail: ${message}`);
-  } finally {
-    setShowAddModal(false);
-    setEditingRecipe(null);
-  }
-}}
-
+          setRecipes((prev) => [...prev, data]);
+          toast.success(`Added "${newRecipe.name}" 🥂`);
+        }
+      } catch (error) {
+        const message =
+          error instanceof Error ? error.message : JSON.stringify(error);
+        console.error("❌ Error saving cocktail:", message);
+        toast.error(`❌ Failed to save cocktail: ${message}`);
+      } finally {
+        setShowAddModal(false);
+        setEditingRecipe(null);
+      }
+    }}
   />
 )}
-    </main>
-  );
-}
+    </div>
+  </main>
+);
+
