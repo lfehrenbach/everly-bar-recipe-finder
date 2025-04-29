@@ -335,22 +335,26 @@ onAdd={async (newRecipe) => {
         .from("cocktails")
         .update(newRecipe)
         .eq("id", editingRecipe.id);
+
       if (error) throw error;
+
       setRecipes((prev) =>
         prev.map((r) => (r.id === editingRecipe.id ? newRecipe : r))
       );
       toast.success(`Updated "${newRecipe.name}" 🍸`);
     } else {
-const newRecipeCopy = { ...newRecipe };
-delete newRecipeCopy.id;
+      const newRecipeCopy = { ...newRecipe };
+      delete newRecipeCopy.id;
 
-const { error } = await supabase
-  .from("cocktails")
-  .insert([newRecipeCopy]);
+      const { error } = await supabase
+        .from("cocktails")
+        .insert([newRecipeCopy]);
 
-if (error) throw error;
-setRecipes((prev) => [...prev, newRecipeCopy]);
-toast.success(`Added "${newRecipe.name}" 🥂`);
+      if (error) throw error;
+
+      setRecipes((prev) => [...prev, newRecipeCopy]);
+      toast.success(`Added "${newRecipe.name}" 🥂`);
+    }
   } catch (error) {
     const message =
       error instanceof Error ? error.message : JSON.stringify(error);
@@ -361,6 +365,7 @@ toast.success(`Added "${newRecipe.name}" 🥂`);
     setEditingRecipe(null);
   }
 }}
+
   />
 )}
     </main>
