@@ -341,7 +341,7 @@ onAdd={async (newRecipe) => {
       );
       toast.success(`Updated "${newRecipe.name}" 🍸`);
     } else {
-      const { id, ...newRecipeWithoutId } = newRecipe;
+      const { id: _id, ...newRecipeWithoutId } = newRecipe;
       const { error } = await supabase
         .from("cocktails")
         .insert([newRecipeWithoutId]);
