@@ -5,7 +5,6 @@ import { useState, useEffect } from "react";
 import { Dialog } from "@headlessui/react";
 import { Button } from "@/components/ui/button";
 
-
 export default function EditCocktailModal({
   onClose,
   onEdit,
@@ -21,20 +20,19 @@ export default function EditCocktailModal({
     setForm(recipeToEdit);
   }, [recipeToEdit]);
 
-const updateField = <K extends keyof Cocktail>(field: K, value: Cocktail[K]) => {
-  setForm((prev) => ({ ...prev, [field]: value }));
-};
+  const updateField = <K extends keyof Cocktail>(field: K, value: Cocktail[K]) => {
+    setForm((prev) => ({ ...prev, [field]: value }));
+  };
 
-const toggleArrayField = (field: keyof Cocktail, value: string) => {
-  setForm((prev) => {
-    const list = prev[field] as string[] | undefined;
-    if (!list) return { ...prev, [field]: [value] };
-    return list.includes(value)
-      ? { ...prev, [field]: list.filter((v) => v !== value) }
-      : { ...prev, [field]: [...list, value] };
-  });
-};
-
+  const toggleArrayField = (field: keyof Cocktail, value: string) => {
+    setForm((prev) => {
+      const list = prev[field] as string[] | undefined;
+      if (!list) return { ...prev, [field]: [value] };
+      return list.includes(value)
+        ? { ...prev, [field]: list.filter((v) => v !== value) }
+        : { ...prev, [field]: [...list, value] };
+    });
+  };
 
   const handleSubmit = () => {
     if (!form.name || !form.method || form.ingredients.length === 0) return;
@@ -76,17 +74,20 @@ const toggleArrayField = (field: keyof Cocktail, value: string) => {
           onChange={(e) => updateField("garnish", e.target.value)}
         />
 
-        <select
-          className="border p-2 rounded w-full"
-          value={form.sweetness ?? ""}
-          onChange={(e) => updateField("sweetness", e.target.value || undefined)}
-        >
-          <option value="">Select Sweetness</option>
-          <option value="dry">Dry</option>
-          <option value="semi-dry">Semi-Dry</option>
-          <option value="balanced">Balanced</option>
-          <option value="sweet">Sweet</option>
-        </select>
+<select
+  className="border p-2 rounded w-full"
+  value={form.sweetness ?? ""}
+  onChange={(e) => {
+    const val = e.target.value as "dry" | "semi-dry" | "balanced" | "sweet" | "";
+    updateField("sweetness", val === "" ? undefined : val);
+  }}
+>
+  <option value="">Select Sweetness</option>
+  <option value="dry">Dry</option>
+  <option value="semi-dry">Semi-Dry</option>
+  <option value="balanced">Balanced</option>
+  <option value="sweet">Sweet</option>
+</select>
 
         <label className="flex items-center gap-2">
           <input
@@ -104,7 +105,7 @@ const toggleArrayField = (field: keyof Cocktail, value: string) => {
               <label key={a} className="flex items-center gap-1 text-sm">
                 <input
                   type="checkbox"
-                  checked={form.allergens?.includes(a)}
+                  checked={form.allergens?.includes(a) ?? false}
                   onChange={() => toggleArrayField("allergens", a)}
                 />
                 <span className="capitalize">{a}</span>
@@ -120,7 +121,7 @@ const toggleArrayField = (field: keyof Cocktail, value: string) => {
               <label key={s} className="flex items-center gap-1 text-sm">
                 <input
                   type="checkbox"
-                  checked={form.seasons?.includes(s)}
+                  checked={form.seasons?.includes(s) ?? false}
                   onChange={() => toggleArrayField("seasons", s)}
                 />
                 <span className="capitalize">{s}</span>
@@ -136,7 +137,7 @@ const toggleArrayField = (field: keyof Cocktail, value: string) => {
               <label key={l} className="flex items-center gap-1 text-sm">
                 <input
                   type="checkbox"
-                  checked={form.liquorTypes?.includes(l)}
+                  checked={form.liquorTypes?.includes(l) ?? false}
                   onChange={() => toggleArrayField("liquorTypes", l)}
                 />
                 <span className="capitalize">{l}</span>
