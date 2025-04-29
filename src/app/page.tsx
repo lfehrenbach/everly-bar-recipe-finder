@@ -344,7 +344,8 @@ onAdd={async (newRecipe) => {
       toast.success(`Updated "${newRecipe.name}" 🍸`);
     } else {
 
-const newRecipeCopy = { ...newRecipe, id: undefined };
+const { id, ...newRecipeCopy } = newRecipe;
+
 
 
       const { error } = await supabase
