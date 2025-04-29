@@ -341,18 +341,16 @@ onAdd={async (newRecipe) => {
       );
       toast.success(`Updated "${newRecipe.name}" 🍸`);
     } else {
-      const newRecipeCopy = { ...newRecipe };
+const newRecipeCopy = { ...newRecipe };
 delete newRecipeCopy.id;
+
 const { error } = await supabase
   .from("cocktails")
   .insert([newRecipeCopy]);
-      const { error } = await supabase
-        .from("cocktails")
-        .insert([newRecipeWithoutId]);
-      if (error) throw error;
-      setRecipes((prev) => [...prev, newRecipeWithoutId]);
-      toast.success(`Added "${newRecipe.name}" 🥂`);
-    }
+
+if (error) throw error;
+setRecipes((prev) => [...prev, newRecipeCopy]);
+toast.success(`Added "${newRecipe.name}" 🥂`);
   } catch (error) {
     const message =
       error instanceof Error ? error.message : JSON.stringify(error);
