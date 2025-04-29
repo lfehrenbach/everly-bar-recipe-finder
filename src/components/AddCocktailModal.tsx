@@ -4,17 +4,7 @@ import { useState } from "react";
 import { Dialog } from "@headlessui/react";
 import { Button } from "@/components/ui/button";
 
-import { Cocktail } from "@/types";
-  name: string;
-  ingredients: string[];
-  method: string;
-  garnish: string;
-  sweetness?: "dry" | "semi-dry" | "balanced" | "sweet";
-  liquorForward?: boolean;
-  allergens?: ("nuts" | "eggs" | "dairy" | "gluten")[];
-  seasons?: ("spring" | "summer" | "fall" | "winter")[];
-  liquorTypes?: ("vodka" | "gin" | "tequila" | "rum" | "whiskey" | "mezcal" | "brandy" | "liqueur")[];
-}
+import { Cocktail } from "@/types"; // ✅ Correct import
 
 export default function AddCocktailModal({
   onClose,
@@ -22,8 +12,8 @@ export default function AddCocktailModal({
   initialData,
 }: {
   onClose: () => void;
-onAdd: (recipe: Cocktail) => void;
-initialData?: Cocktail;
+  onAdd: (recipe: Cocktail) => void;
+  initialData?: Cocktail;
 }) {
   const [form, setForm] = useState<Cocktail>(
     initialData ?? {
@@ -39,22 +29,21 @@ initialData?: Cocktail;
     }
   );
 
-  const updateField = (field: keyof Recipe, value: any) => {
+  const updateField = (field: keyof Cocktail, value: any) => {
     setForm((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleCheckboxChange =
-    (field: keyof Recipe) => (e: React.ChangeEvent<HTMLInputElement>) => {
-      const value = e.target.value;
-      const checked = e.target.checked;
-      setForm((prev) => {
-        const list = (prev[field] as string[]) ?? [];
-        const updated = checked
-          ? [...list, value]
-          : list.filter((v) => v !== value);
-        return { ...prev, [field]: updated };
-      });
-    };
+  const handleCheckboxChange = (field: keyof Cocktail) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    const checked = e.target.checked;
+    setForm((prev) => {
+      const list = (prev[field] as string[]) ?? [];
+      const updated = checked
+        ? [...list, value]
+        : list.filter((v) => v !== value);
+      return { ...prev, [field]: updated };
+    });
+  };
 
   const handleSubmit = () => {
     if (!form.name || form.ingredients.length === 0 || !form.method) {
