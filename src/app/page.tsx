@@ -209,14 +209,14 @@ export default function Home() {
                 <ul className="list-disc list-inside mb-2">
                   {item.ingredients?.map((ing: string, i: number) => <li key={i}>{ing}</li>)}
                 </ul>
-                <p><strong>Method:</strong> {item.method}</p>
+<p><strong>Method:</strong> {item.method}</p>
 
-                {/* Garnish */}
-{item && "garnish" in item && item.garnish && (
+{item?.garnish ? (
   <p>
     <strong>Garnish:</strong> {item.garnish}
   </p>
-)}
+) : null}
+
 
                 {/* Allergens */}
                 {item && "allergens" in item && item.allergens?.length > 0 ? (
