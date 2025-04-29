@@ -29,9 +29,10 @@ export default function AddCocktailModal({
     }
   );
 
-  const updateField = (field: keyof Cocktail, value: any) => {
-    setForm((prev) => ({ ...prev, [field]: value }));
-  };
+  const updateField = <K extends keyof Cocktail>(field: K, value: Cocktail[K]) => {
+  setForm((prev) => ({ ...prev, [field]: value }));
+};
+
 
   const handleCheckboxChange = (field: keyof Cocktail) => (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
