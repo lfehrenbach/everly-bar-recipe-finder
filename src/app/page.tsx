@@ -278,17 +278,17 @@ export default function Home() {
                   <strong>Method:</strong> {item.method}
                 </p>
 
-                {/* Garnish */}
-                {(() => {
-                  if ("garnish" in item && item.garnish) {
-                    return (
-                      <p>
-                        <strong>Garnish:</strong> {item.garnish}
-                      </p>
-                    );
-                  }
-                  return null;
-                })()}
+{/* Garnish */}
+{((): React.ReactNode => {
+  if ("garnish" in item && item.garnish) {
+    return (
+      <p>
+        <strong>Garnish:</strong> {item.garnish}
+      </p>
+    );
+  }
+  return null;
+})()}
 
                 {/* Allergens */}
                 {(() => {
