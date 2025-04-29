@@ -119,6 +119,7 @@ export default function Home() {
         {/* Filters */}
         {!showBatches && showFilters && (
           <div className="flex flex-wrap gap-2 sm:gap-4 mb-6 text-sm items-center border rounded p-4 bg-white shadow-sm overflow-x-auto">
+            {/* Sort Dropdown */}
             <select className="border p-2 rounded" value={sortOption} onChange={(e) => setSortOption(e.target.value)}>
               <option value="">Sort by...</option>
               <option value="name-asc">Name A–Z</option>
@@ -127,6 +128,7 @@ export default function Home() {
               <option value="liquorForward">Strength</option>
             </select>
 
+            {/* Sweetness Dropdown */}
             <select className="border p-2 rounded" value={filterSweetness} onChange={(e) => setFilterSweetness(e.target.value)}>
               <option value="">All Sweetness</option>
               <option value="dry">Dry</option>
@@ -135,6 +137,7 @@ export default function Home() {
               <option value="sweet">Sweet</option>
             </select>
 
+            {/* Allergens */}
             {["nuts", "eggs", "dairy", "gluten"].map((a) => (
               <label key={a} className="flex items-center gap-1 text-sm">
                 <input
@@ -150,6 +153,7 @@ export default function Home() {
               </label>
             ))}
 
+            {/* 🌸 Seasons (NEW!) */}
             {["spring", "summer", "fall", "winter"].map((season) => (
               <label key={season} className="flex items-center gap-1 text-sm">
                 <input
@@ -165,6 +169,7 @@ export default function Home() {
               </label>
             ))}
 
+            {/* Clear Filters Button */}
             <Button
               variant="outline"
               onClick={() => {
@@ -196,17 +201,18 @@ export default function Home() {
                   {/* Garnish */}
                   {isCocktail(item) && item.garnish && <p><strong>Garnish:</strong> {item.garnish}</p>}
 
-  // Allergen section:
-  {isCocktail(item) && Array.isArray(item.allergens) && item.allergens.length > 0 && (
-    <div className="mt-4 text-sm text-red-600 flex flex-wrap gap-2">
-      ⚠️ Contains:{" "}
-      {item.allergens.map((a, i) => (
-        <span key={i}>
-          {a === "nuts" ? "🥜 Nuts" : a === "eggs" ? "🥚 Eggs" : a === "dairy" ? "🥛 Dairy" : "🌾 Gluten"}
-        </span>
-      ))}
-    </div>
-  )}
+                  {/* Allergen section */}
+                  {isCocktail(item) && Array.isArray(item.allergens) && item.allergens.length > 0 && (
+                    <div className="mt-4 text-sm text-red-600 flex flex-wrap gap-2">
+                      ⚠️ Contains:{" "}
+                      {item.allergens.map((a, i) => (
+                        <span key={i}>
+                          {a === "nuts" ? "🥜 Nuts" : a === "eggs" ? "🥚 Eggs" : a === "dairy" ? "🥛 Dairy" : "🌾 Gluten"}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+
                   {/* Sweetness Meter */}
                   {isCocktail(item) && item.sweetness && (
                     <div className="mt-9">
@@ -232,25 +238,26 @@ export default function Home() {
                     </div>
                   )}
 
-  // Liquor types:
-  {isCocktail(item) && Array.isArray(item.liquorTypes) && item.liquorTypes.length > 0 && (
-    <div className="mt-8 text-sm text-purple-600 flex items-center gap-2">
-      🥃 <span className="font-semibold">Liquor:</span>{" "}
-      {item.liquorTypes.map((l) => l.charAt(0).toUpperCase() + l.slice(1)).join(", ")}
-    </div>
-  )}
+                  {/* Liquor Types */}
+                  {isCocktail(item) && Array.isArray(item.liquorTypes) && item.liquorTypes.length > 0 && (
+                    <div className="mt-8 text-sm text-purple-600 flex items-center gap-2">
+                      🥃 <span className="font-semibold">Liquor:</span>{" "}
+                      {item.liquorTypes.map((l) => l.charAt(0).toUpperCase() + l.slice(1)).join(", ")}
+                    </div>
+                  )}
 
- // Seasons:
-   {isCocktail(item) && Array.isArray(item.seasons) && item.seasons.length > 0 && (
-    <div className="mt-4 text-sm text-blue-600 flex flex-wrap items-center gap-2">
-      🌿 Season:{" "}
-      {item.seasons.map((s, i) => (
-        <span key={i}>
-          {s === "spring" ? "🌸 Spring" : s === "summer" ? "☀️ Summer" : s === "fall" ? "🍂 Fall" : "❄️ Winter"}
-        </span>
-      ))}
-    </div>
-  )}
+                  {/* Seasons */}
+                  {isCocktail(item) && Array.isArray(item.seasons) && item.seasons.length > 0 && (
+                    <div className="mt-4 text-sm text-blue-600 flex flex-wrap items-center gap-2">
+                      🌿 Season:{" "}
+                      {item.seasons.map((s, i) => (
+                        <span key={i}>
+                          {s === "spring" ? "🌸 Spring" : s === "summer" ? "☀️ Summer" : s === "fall" ? "🍂 Fall" : "❄️ Winter"}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+
                   {/* Edit/Delete */}
                   <div className="mt-4 flex justify-end">
                     <DropdownMenu>
