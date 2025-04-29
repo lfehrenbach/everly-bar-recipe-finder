@@ -37,17 +37,11 @@ export default function Home() {
       const { data: cocktailData, error: cocktailError } = await supabase.from("cocktails").select("*");
       const { data: batchData, error: batchError } = await supabase.from("batches").select("*");
 
-      if (cocktailError) {
-        console.error("❌ Error fetching cocktails:", cocktailError);
-      } else {
-        setRecipes(cocktailData ?? []);
-      }
+      if (cocktailError) console.error("❌ Error fetching cocktails:", cocktailError);
+      else setRecipes(cocktailData ?? []);
 
-      if (batchError) {
-        console.error("❌ Error fetching batches:", batchError);
-      } else {
-        setBatches(batchData ?? []);
-      }
+      if (batchError) console.error("❌ Error fetching batches:", batchError);
+      else setBatches(batchData ?? []);
     };
 
     fetchData();
@@ -91,29 +85,23 @@ export default function Home() {
       <Toaster richColors position="top-center" />
       <h1 className="text-2xl sm:text-3xl font-bold mb-4 text-center">Everly Bar Recipe Finder</h1>
 
-      {/* Top Buttons */}
+      {/* Top Controls */}
       <div className="flex flex-wrap sm:flex-nowrap gap-2 sm:gap-4 mb-6 justify-center sm:justify-start">
-        <Button variant={!showBatches ? "default" : "outline"} onClick={() => setShowBatches(false)}>
-          🍸 Cocktail Recipes
-        </Button>
-        <Button variant={showBatches ? "default" : "outline"} onClick={() => setShowBatches(true)}>
-          🧪 Batch & Prep
-        </Button>
+        <Button variant={!showBatches ? "default" : "outline"} onClick={() => setShowBatches(false)}>🍸 Cocktail Recipes</Button>
+        <Button variant={showBatches ? "default" : "outline"} onClick={() => setShowBatches(true)}>🧪 Batch & Prep</Button>
         <Button variant="outline" className="hidden sm:inline-flex" onClick={() => setShowFilters((prev) => !prev)}>
           {showFilters ? "Hide Filters" : "Show Filters"}
         </Button>
-        <Button
-          onClick={async () => {
-            const isAuthed = await checkPassword();
-            if (isAuthed) setShowAddModal(true);
-            else alert("Incorrect password.");
-          }}
-        >
+        <Button onClick={async () => {
+          const isAuthed = await checkPassword();
+          if (isAuthed) setShowAddModal(true);
+          else alert("Incorrect password.");
+        }}>
           ➕ Add Cocktail
         </Button>
       </div>
 
-      {/* Search Bar */}
+      {/* Search */}
       <Input
         type="text"
         placeholder={showBatches ? "Search batch or ingredient..." : "Search cocktail or ingredient..."}
@@ -125,7 +113,6 @@ export default function Home() {
       {/* Filters */}
       {!showBatches && showFilters && (
         <div className="flex flex-wrap gap-2 sm:gap-4 mb-6 text-sm items-center border rounded p-4 bg-white shadow-sm overflow-x-auto">
-          {/* Sorting */}
           <select className="border p-2 rounded" value={sortOption} onChange={(e) => setSortOption(e.target.value)}>
             <option value="">Sort by...</option>
             <option value="name-asc">Name A–Z</option>
@@ -134,7 +121,6 @@ export default function Home() {
             <option value="liquorForward">Strength</option>
           </select>
 
-          {/* Sweetness Filter */}
           <select className="border p-2 rounded" value={filterSweetness} onChange={(e) => setFilterSweetness(e.target.value)}>
             <option value="">All Sweetness</option>
             <option value="dry">Dry</option>
@@ -143,46 +129,29 @@ export default function Home() {
             <option value="sweet">Sweet</option>
           </select>
 
-          {/* Filters */}
           {["nuts", "eggs", "dairy", "gluten"].map((a) => (
             <label key={a} className="flex items-center gap-1 text-sm">
-              <input
-                type="checkbox"
-                checked={filterAllergens.includes(a)}
-                onChange={() =>
-                  setFilterAllergens((prev) =>
-                    prev.includes(a) ? prev.filter((x) => x !== a) : [...prev, a]
-                  )
-                }
-              />
+              <input type="checkbox" checked={filterAllergens.includes(a)} onChange={() =>
+                setFilterAllergens((prev) => prev.includes(a) ? prev.filter(x => x !== a) : [...prev, a])
+              } />
               <span className="capitalize">{a}</span>
             </label>
           ))}
+
           {["spring", "summer", "fall", "winter"].map((s) => (
             <label key={s} className="flex items-center gap-1 text-sm">
-              <input
-                type="checkbox"
-                checked={filterSeasons.includes(s)}
-                onChange={() =>
-                  setFilterSeasons((prev) =>
-                    prev.includes(s) ? prev.filter((x) => x !== s) : [...prev, s]
-                  )
-                }
-              />
+              <input type="checkbox" checked={filterSeasons.includes(s)} onChange={() =>
+                setFilterSeasons((prev) => prev.includes(s) ? prev.filter(x => x !== s) : [...prev, s])
+              } />
               <span className="capitalize">{s}</span>
             </label>
           ))}
+
           {["vodka", "gin", "tequila", "rum", "whiskey", "mezcal", "brandy", "liqueur"].map((l) => (
             <label key={l} className="flex items-center gap-1 text-sm">
-              <input
-                type="checkbox"
-                checked={filterLiquorTypes.includes(l)}
-                onChange={() =>
-                  setFilterLiquorTypes((prev) =>
-                    prev.includes(l) ? prev.filter((x) => x !== l) : [...prev, l]
-                  )
-                }
-              />
+              <input type="checkbox" checked={filterLiquorTypes.includes(l)} onChange={() =>
+                setFilterLiquorTypes((prev) => prev.includes(l) ? prev.filter(x => x !== l) : [...prev, l])
+              } />
               <span className="capitalize">{l}</span>
             </label>
           ))}
@@ -198,7 +167,7 @@ export default function Home() {
         </div>
       )}
 
-      {/* Recipes */}
+      {/* Display Recipes or Batches */}
       <div className="grid gap-4">
         {(showBatches ? filteredBatches : filteredRecipes).map((item, idx) => (
           <motion.div key={idx} initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
@@ -209,17 +178,13 @@ export default function Home() {
                 <ul className="list-disc list-inside mb-2">
                   {item.ingredients?.map((ing: string, i: number) => <li key={i}>{ing}</li>)}
                 </ul>
-<p><strong>Method:</strong> {item.method}</p>
+                <p><strong>Method:</strong> {item.method}</p>
 
-{item?.garnish ? (
-  <p>
-    <strong>Garnish:</strong> {item.garnish}
-  </p>
-) : null}
+                {!showBatches && "garnish" in item && item.garnish && (
+                  <p><strong>Garnish:</strong> {item.garnish}</p>
+                )}
 
-
-                {/* Allergens */}
-                {item && "allergens" in item && item.allergens?.length > 0 ? (
+                {!showBatches && "allergens" in item && item.allergens?.length > 0 && (
                   <div className="mt-4 text-sm text-red-600 flex flex-wrap gap-2">
                     ⚠️ Contains: {item.allergens.map((a: string, i: number) => (
                       <span key={i}>
@@ -227,10 +192,9 @@ export default function Home() {
                       </span>
                     ))}
                   </div>
-                ) : null}
+                )}
 
-                {/* Sweetness */}
-                {item && "sweetness" in item && item.sweetness && (
+                {!showBatches && "sweetness" in item && item.sweetness && (
                   <div className="mt-8">
                     <div className="relative w-full max-w-xs h-5 bg-gray-200 rounded-full">
                       <div
@@ -254,8 +218,7 @@ export default function Home() {
                   </div>
                 )}
 
-                {/* Seasons */}
-                {item && "seasons" in item && item.seasons?.length > 0 ? (
+                {!showBatches && "seasons" in item && item.seasons?.length > 0 && (
                   <div className="mt-9 text-sm text-blue-600 flex flex-wrap items-center gap-2">
                     🌿 Season: {item.seasons.map((s: string, i: number) => (
                       <span key={i}>
@@ -263,16 +226,15 @@ export default function Home() {
                       </span>
                     ))}
                   </div>
-                ) : null}
+                )}
 
-                {/* Liquor Types */}
-                {item && "liquorTypes" in item && item.liquorTypes?.length > 0 ? (
+                {!showBatches && "liquorTypes" in item && item.liquorTypes?.length > 0 && (
                   <div className="mt-4 text-sm text-purple-600 flex items-center gap-2">
-                    🥃 <span className="font-semibold">Liquor:</span> {item.liquorTypes.map((l: string) => l.charAt(0).toUpperCase() + l.slice(1)).join(", ")}
+                    🥃 <span className="font-semibold">Liquor:</span>{" "}
+                    {item.liquorTypes.map((l: string) => l.charAt(0).toUpperCase() + l.slice(1)).join(", ")}
                   </div>
-                ) : null}
+                )}
 
-                {/* Edit/Delete Dropdown */}
                 <div className="mt-4 flex justify-end">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -281,20 +243,17 @@ export default function Home() {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="w-32">
-                      {/* Edit */}
                       <DropdownMenuItem
                         onSelect={async () => {
                           const isAuthed = await checkPassword();
                           if (isAuthed) {
-                            setEditingRecipe(item);
+                            setEditingRecipe(item as Cocktail);
                             setShowAddModal(true);
                           }
                         }}
                       >
                         <Pencil className="mr-2 h-4 w-4" /> Edit
                       </DropdownMenuItem>
-
-                      {/* Delete */}
                       <DropdownMenuItem
                         onSelect={async () => {
                           const isAuthed = await checkPassword();
@@ -324,7 +283,6 @@ export default function Home() {
         ))}
       </div>
 
-      {/* Modal */}
       {showAddModal && (
         <AddCocktailModal
           initialData={editingRecipe}
