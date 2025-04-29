@@ -213,8 +213,10 @@ const [editingRecipe, setEditingRecipe] = useState<Cocktail | null>(null);
                   {item.ingredients?.map((ing: string, i: number) => <li key={i}>{ing}</li>)}
                 </ul>
                 <p><strong>Method:</strong> {item.method}</p>
-               {!showBatches && item.garnish && (
+               {"garnish" in item && item.garnish && (
   <p><strong>Garnish:</strong> {item.garnish}</p>
+)}
+
 )}
 {/* Allergens */}
 {item.allergens?.length > 0 && (
