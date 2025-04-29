@@ -64,21 +64,21 @@ export default function Home() {
   const filteredRecipes = sortedRecipes.filter((recipe) => {
     const matchesQuery =
       recipe.name.toLowerCase().includes(query.toLowerCase()) ||
-      recipe.ingredients?.some((ing: string) => ing.toLowerCase().includes(query.toLowerCase()));
+      recipe.ingredients?.some((ing) => ing.toLowerCase().includes(query.toLowerCase()));
     const matchesSweetness = !filterSweetness || recipe.sweetness === filterSweetness;
     const matchesAllergens =
-      filterAllergens.length === 0 || !recipe.allergens?.some((a: string) => filterAllergens.includes(a));
+      filterAllergens.length === 0 || !recipe.allergens?.some((a) => filterAllergens.includes(a));
     const matchesSeasons =
-      filterSeasons.length === 0 || recipe.seasons?.some((s: string) => filterSeasons.includes(s));
+      filterSeasons.length === 0 || recipe.seasons?.some((s) => filterSeasons.includes(s));
     const matchesLiquorTypes =
-      filterLiquorTypes.length === 0 || recipe.liquorTypes?.some((t: string) => filterLiquorTypes.includes(t));
+      filterLiquorTypes.length === 0 || recipe.liquorTypes?.some((t) => filterLiquorTypes.includes(t));
     return matchesQuery && matchesSweetness && matchesAllergens && matchesSeasons && matchesLiquorTypes;
   });
 
   const filteredBatches = batches.filter(
     (batch) =>
       batch.name.toLowerCase().includes(query.toLowerCase()) ||
-      batch.ingredients?.some((ing: string) => ing.toLowerCase().includes(query.toLowerCase()))
+      batch.ingredients?.some((ing) => ing.toLowerCase().includes(query.toLowerCase()))
   );
 
   return (
@@ -86,6 +86,7 @@ export default function Home() {
       <Toaster richColors position="top-center" />
       <h1 className="text-2xl sm:text-3xl font-bold mb-4 text-center">Everly Bar Recipe Finder</h1>
 
+      {/* Controls */}
       <div className="flex flex-wrap sm:flex-nowrap gap-2 sm:gap-4 mb-6 justify-center sm:justify-start">
         <Button variant={!showBatches ? "default" : "outline"} onClick={() => setShowBatches(false)}>🍸 Cocktail Recipes</Button>
         <Button variant={showBatches ? "default" : "outline"} onClick={() => setShowBatches(true)}>🧪 Batch & Prep</Button>
@@ -99,6 +100,7 @@ export default function Home() {
         }}>➕ Add Cocktail</Button>
       </div>
 
+      {/* Search */}
       <Input
         type="text"
         placeholder={showBatches ? "Search batch or ingredient..." : "Search cocktail or ingredient..."}
@@ -107,6 +109,7 @@ export default function Home() {
         className="mb-6"
       />
 
+      {/* Filters */}
       {!showBatches && showFilters && (
         <div className="flex flex-wrap gap-2 sm:gap-4 mb-6 text-sm items-center border rounded p-4 bg-white shadow-sm overflow-x-auto">
           <select className="border p-2 rounded" value={sortOption} onChange={(e) => setSortOption(e.target.value)}>
@@ -116,7 +119,6 @@ export default function Home() {
             <option value="sweetness">Sweetness Level</option>
             <option value="liquorForward">Strength</option>
           </select>
-
           <select className="border p-2 rounded" value={filterSweetness} onChange={(e) => setFilterSweetness(e.target.value)}>
             <option value="">All Sweetness</option>
             <option value="dry">Dry</option>
@@ -124,22 +126,14 @@ export default function Home() {
             <option value="balanced">Balanced</option>
             <option value="sweet">Sweet</option>
           </select>
-
           {["nuts", "eggs", "dairy", "gluten"].map((a) => (
             <label key={a} className="flex items-center gap-1 text-sm">
-              <input
-                type="checkbox"
-                checked={filterAllergens.includes(a)}
-                onChange={() =>
-                  setFilterAllergens((prev) =>
-                    prev.includes(a) ? prev.filter((x) => x !== a) : [...prev, a]
-                  )
-                }
-              />
+              <input type="checkbox" checked={filterAllergens.includes(a)} onChange={() =>
+                setFilterAllergens((prev) => prev.includes(a) ? prev.filter(x => x !== a) : [...prev, a])
+              } />
               <span className="capitalize">{a}</span>
             </label>
           ))}
-
           <Button variant="outline" onClick={() => {
             setFilterSweetness("");
             setFilterAllergens([]);
@@ -151,6 +145,7 @@ export default function Home() {
         </div>
       )}
 
+      {/* Recipe Cards */}
       <div className="grid gap-4">
         {(showBatches ? filteredBatches : filteredRecipes).map((item, idx) => (
           <motion.div key={idx} initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
@@ -159,7 +154,7 @@ export default function Home() {
                 <h2 className="text-xl font-semibold mb-2">{item.name}</h2>
                 <p className="font-semibold">Ingredients:</p>
                 <ul className="list-disc list-inside mb-2">
-                  {item.ingredients?.map((ing: string, i: number) => <li key={i}>{ing}</li>)}
+                  {item.ingredients?.map((ing, i) => <li key={i}>{ing}</li>)}
                 </ul>
                 <p><strong>Method:</strong> {item.method}</p>
 
@@ -173,7 +168,7 @@ export default function Home() {
 
                 {/* Allergens */}
                 {(() => {
-                  if (!showBatches && isCocktail(item) && item.allergens && item.allergens.length > 0) {
+                  if (!showBatches && isCocktail(item) && item.allergens?.length) {
                     return (
                       <div className="mt-4 text-sm text-red-600 flex flex-wrap gap-2">
                         ⚠️ Contains: {item.allergens.map((a, i) => (
@@ -208,9 +203,7 @@ export default function Home() {
                             🍸
                           </div>
                           <div className="absolute top-6 w-full flex justify-between px-2 text-xs text-gray-500">
-                            <span>Dry</span><span>Semi-Dry</span><span>Balanced</span><
-::contentReference[oaicite:2]{index=2}
-                             <span>Dry</span><span>Semi-Dry</span><span>Balanced</span><span>Sweet</span>
+                            <span>Dry</span><span>Semi-Dry</span><span>Balanced</span><span>Sweet</span>
                           </div>
                         </div>
                       </div>
@@ -221,7 +214,7 @@ export default function Home() {
 
                 {/* Liquor Types */}
                 {(() => {
-                  if (!showBatches && isCocktail(item) && item.liquorTypes?.length > 0) {
+                  if (!showBatches && isCocktail(item) && item.liquorTypes?.length) {
                     return (
                       <div className="mt-4 text-sm text-purple-600 flex items-center gap-2">
                         🥃 <span className="font-semibold">Liquor:</span>{" "}
@@ -259,9 +252,8 @@ export default function Home() {
                             const confirmDelete = confirm(`Delete "${item.name}"?`);
                             if (confirmDelete) {
                               const { error } = await supabase.from("cocktails").delete().eq("id", item.id);
-                              if (error) {
-                                toast.error("❌ Failed to delete cocktail!");
-                              } else {
+                              if (error) toast.error("❌ Failed to delete cocktail!");
+                              else {
                                 setRecipes((prev) => prev.filter((r) => r.id !== item.id));
                                 toast.success(`Deleted "${item.name}" 🗑️`);
                               }
@@ -280,7 +272,7 @@ export default function Home() {
         ))}
       </div>
 
-      {/* Add/Edit Modal */}
+      {/* Modal */}
       {showAddModal && (
         <AddCocktailModal
           initialData={editingRecipe}
@@ -315,4 +307,3 @@ export default function Home() {
     </main>
   );
 }
-
