@@ -129,7 +129,7 @@ const [form, setForm] = useState<Cocktail>(
                 <input
                   type="checkbox"
                   value={a}
-                  checked={form.allergens.includes(a)}
+                  checked={form.allergens?.includes(a) ?? false}
                   onChange={handleCheckboxChange("allergens")}
                 />
                 <span className="capitalize">{a}</span>
@@ -147,7 +147,7 @@ const [form, setForm] = useState<Cocktail>(
                 <input
                   type="checkbox"
                   value={s}
-                  checked={form.seasons.includes(s)}
+                  checked={form.seasons?.includes(s) ?? false}
                   onChange={handleCheckboxChange("seasons")}
                 />
                 <span className="capitalize">{s}</span>
@@ -165,7 +165,7 @@ const [form, setForm] = useState<Cocktail>(
                 <input
                   type="checkbox"
                   value={l}
-                  checked={form.liquorTypes.includes(l)}
+                  checked={form.liquorTypes?.includes(l) ?? false}	
                   onChange={handleCheckboxChange("liquorTypes")}
                 />
                 <span className="capitalize">{l}</span>
