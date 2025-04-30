@@ -1,6 +1,6 @@
 export async function fetchExternalCocktailFromGoogle(query: string) {
-    const apiKey = process.env.GOOGLE_CUSTOM_SEARCH_API_KEY!;
-    const cx = process.env.GOOGLE_CUSTOM_SEARCH_CX_ID!;
+    const apiKey = process.env.NEXT_PUBLIC_GOOGLE_CUSTOM_SEARCH_API_KEY!;
+    const cx = process.env.NEXT_PUBLIC_GOOGLE_CUSTOM_SEARCH_CX_ID!;
   
     if (!query.trim()) {
       throw new Error("Query is required.");
@@ -10,9 +10,11 @@ export async function fetchExternalCocktailFromGoogle(query: string) {
   
     const res = await fetch(searchUrl);
     if (!res.ok) {
-      throw new Error("Failed to fetch external search results");
+      const err = await res.text();
+      throw new Error(`Failed to fetch external search results: ${err}`);
     }
   
     const data = await res.json();
     return data.items || [];
   }
+  
