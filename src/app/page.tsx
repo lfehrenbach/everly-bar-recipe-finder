@@ -161,45 +161,77 @@ const [showAddBatchModal, setShowAddBatchModal] = useState(false);
       </select>
     </label>
 
-    {/* Allergens */}
-    <fieldset className="flex flex-col gap-1">
-      <span className="font-medium">Allergens</span>
-      {["nuts", "eggs", "dairy", "gluten"].map((a) => (
-        <label key={a} className="flex items-center gap-1">
-          <input
-            type="checkbox"
-            checked={filterAllergens.includes(a)}
-            onChange={() =>
-              setFilterAllergens((prev) =>
-                prev.includes(a) ? prev.filter((x) => x !== a) : [...prev, a]
-              )
-            }
-          />
-          <span className="capitalize">{a}</span>
-        </label>
-      ))}
-    </fieldset>
+{/* Allergens – Desktop */}
+<div className="hidden sm:flex flex-col gap-1">
+  <span className="font-medium mb-1">Allergens</span>
+  <div className="flex flex-wrap gap-2">
+    {[
+      { key: "nuts", label: "🥜 Nuts" },
+      { key: "eggs", label: "🥚 Eggs" },
+      { key: "dairy", label: "🥛 Dairy" },
+      { key: "gluten", label: "🌾 Gluten" },
+    ].map(({ key, label }) => (
+      <label
+        key={key}
+        className={`cursor-pointer border rounded-full px-3 py-1 text-sm flex items-center gap-1 ${
+          filterAllergens.includes(key)
+            ? "bg-red-100 border-red-400 text-red-800"
+            : "bg-white dark:bg-gray-800 border-gray-300 text-gray-700"
+        }`}
+      >
+        <input
+          type="checkbox"
+          value={key}
+          checked={filterAllergens.includes(key)}
+          onChange={() =>
+            setFilterAllergens((prev) =>
+              prev.includes(key) ? prev.filter((a) => a !== key) : [...prev, key]
+            )
+          }
+          className="hidden"
+        />
+        <span>{label}</span>
+      </label>
+    ))}
+  </div>
+</div>
 
-    {/* Seasons */}
-    <fieldset className="flex flex-col gap-1">
-      <span className="font-medium">Seasons</span>
-      {["spring", "summer", "fall", "winter"].map((season) => (
-        <label key={season} className="flex items-center gap-1">
-          <input
-            type="checkbox"
-            checked={filterSeasons.includes(season)}
-            onChange={() =>
-              setFilterSeasons((prev) =>
-                prev.includes(season)
-                  ? prev.filter((s) => s !== season)
-                  : [...prev, season]
-              )
-            }
-          />
-          <span className="capitalize">{season}</span>
-        </label>
-      ))}
-    </fieldset>
+
+{/* Seasons – Desktop */}
+<div className="hidden sm:flex flex-col gap-1">
+  <span className="font-medium mb-1">Seasons</span>
+  <div className="flex flex-wrap gap-2">
+    {[
+      { key: "spring", label: "🌸 Spring" },
+      { key: "summer", label: "☀️ Summer" },
+      { key: "fall", label: "🍂 Fall" },
+      { key: "winter", label: "❄️ Winter" },
+    ].map(({ key, label }) => (
+      <label
+        key={key}
+        className={`cursor-pointer border rounded-full px-3 py-1 text-sm flex items-center gap-1 ${
+          filterSeasons.includes(key)
+            ? "bg-blue-100 border-blue-400 text-blue-800"
+            : "bg-white dark:bg-gray-800 border-gray-300 text-gray-700"
+        }`}
+      >
+        <input
+          type="checkbox"
+          value={key}
+          checked={filterSeasons.includes(key)}
+          onChange={() =>
+            setFilterSeasons((prev) =>
+              prev.includes(key) ? prev.filter((s) => s !== key) : [...prev, key]
+            )
+          }
+          className="hidden"
+        />
+        <span>{label}</span>
+      </label>
+    ))}
+  </div>
+</div>
+
 
 {/* Liquor Types – Desktop */}
 <div className="hidden sm:flex flex-col gap-1">
