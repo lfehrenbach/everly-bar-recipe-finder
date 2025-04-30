@@ -21,6 +21,12 @@ import { MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 import { Toaster, toast } from "sonner";
 import { fetchExternalCocktailFromGoogle } from "@/lib/fetchExternalCocktail";
 
+type ExternalCocktailResult = {
+  title: string;
+  link: string;
+  snippet?: string;
+};
+
 function isCocktail(item: Cocktail | Batch): item is Cocktail {
   return "garnish" in item;
 }
@@ -41,7 +47,7 @@ const [showAddBatchModal, setShowAddBatchModal] = useState(false);
   const [filterSeasons, setFilterSeasons] = useState<string[]>([]);
   const [filterLiquorTypes, setFilterLiquorTypes] = useState<string[]>([]);
   const [darkMode, setDarkMode] = useState(false);
-const [externalResults, setExternalResults] = useState<any[]>([]);
+const [externalResults, setExternalResults] = useState<ExternalCocktailResult[]>([]);
 
 
   useEffect(() => {
