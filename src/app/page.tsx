@@ -203,10 +203,26 @@ const [showAddBatchModal, setShowAddBatchModal] = useState(false);
 
 {/* Liquor Types – Desktop */}
 <div className="hidden sm:flex flex-col gap-1">
-  <span className="font-medium">Liquor Types</span>
-  <div className="flex flex-wrap gap-4">
-    {["vodka", "gin", "tequila", "rum", "whiskey", "mezcal", "brandy", "liqueur"].map((type) => (
-      <label key={type} className="flex items-center gap-1 text-sm">
+  <span className="font-medium mb-1">Liquor Types</span>
+  <div className="flex flex-wrap gap-2">
+    {[
+      { type: "vodka", label: "🍸 Vodka" },
+      { type: "gin", label: "🌲 Gin" },
+      { type: "tequila", label: "🍋🧂 Tequila" },
+      { type: "rum", label: "🏴‍☠️ Rum" },
+      { type: "whiskey", label: "🥃 Whiskey" },
+      { type: "mezcal", label: "🔥 Mezcal" },
+      { type: "brandy", label: "🍷 Brandy" },
+      { type: "liqueur", label: "🍬 Liqueur" },
+    ].map(({ type, label }) => (
+      <label
+        key={type}
+        className={`cursor-pointer border rounded-full px-3 py-1 text-sm flex items-center gap-1 ${
+          filterLiquorTypes.includes(type)
+            ? "bg-purple-100 border-purple-400 text-purple-800"
+            : "bg-white dark:bg-gray-800 border-gray-300 text-gray-700"
+        }`}
+      >
         <input
           type="checkbox"
           value={type}
@@ -218,12 +234,14 @@ const [showAddBatchModal, setShowAddBatchModal] = useState(false);
                 : [...prev, type]
             )
           }
+          className="hidden"
         />
-        <span className="capitalize">{type}</span>
+        <span>{label}</span>
       </label>
     ))}
   </div>
 </div>
+
 
 {/* Liquor Types – Mobile Dropdown */}
 <label className="sm:hidden flex flex-col">
@@ -237,9 +255,18 @@ const [showAddBatchModal, setShowAddBatchModal] = useState(false);
       setFilterLiquorTypes(selected);
     }}
   >
-    {["vodka", "gin", "tequila", "rum", "whiskey", "mezcal", "brandy", "liqueur"].map((type) => (
+    {[
+      { type: "vodka", label: "🍸 Vodka" },
+      { type: "gin", label: "🌲 Gin" },
+      { type: "tequila", label: "🍋🧂 Tequila" },
+      { type: "rum", label: "🏴‍☠️ Rum" },
+      { type: "whiskey", label: "🥃 Whiskey" },
+      { type: "mezcal", label: "🔥 Mezcal" },
+      { type: "brandy", label: "🍷 Brandy" },
+      { type: "liqueur", label: "🍬 Liqueur" },
+    ].map(({ type, label }) => (
       <option key={type} value={type}>
-        {type.charAt(0).toUpperCase() + type.slice(1)}
+        {label}
       </option>
     ))}
   </select>
