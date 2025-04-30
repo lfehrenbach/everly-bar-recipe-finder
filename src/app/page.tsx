@@ -91,26 +91,32 @@ const [showAddBatchModal, setShowAddBatchModal] = useState(false);
         <h1 className="text-2xl sm:text-3xl font-bold mb-4 text-center">Everly Bar Recipe Finder</h1>
 
         {/* Controls */}
-        <div className="flex flex-wrap sm:flex-nowrap gap-2 sm:gap-4 mb-6 justify-center sm:justify-start">
-          <Button variant={!showBatches ? "default" : "outline"} onClick={() => setShowBatches(false)}>🍸 Cocktail Recipes</Button>
-          <Button variant={showBatches ? "default" : "outline"} onClick={() => setShowBatches(true)}>🧪 Batch & Prep</Button>
-          <Button variant="outline" className="hidden sm:inline-flex" onClick={() => setShowFilters((prev) => !prev)}>
-            {showFilters ? "Hide Filters" : "Show Filters"}
-          </Button>
-          <Button variant="outline" onClick={() => setDarkMode((prev) => !prev)}>
-            {darkMode ? "🌞 Light Mode" : "🌙 Dark Mode"}
-          </Button>
-<Button
-  onClick={async () => {
-    const isAuthed = await checkPassword();
-    if (isAuthed) {
-      showBatches ? setShowAddBatchModal(true) : setShowAddModal(true);
-    } else alert("Incorrect password.");
-  }}
->
-  ➕ Add {showBatches ? "Batch" : "Cocktail"}
-</Button>        </div>
-
+<div className="flex flex-wrap sm:flex-nowrap gap-2 sm:gap-4 mb-6 justify-center sm:justify-start">
+  <Button variant={!showBatches ? "default" : "outline"} onClick={() => setShowBatches(false)}>🍸 Cocktail Recipes</Button>
+  <Button variant={showBatches ? "default" : "outline"} onClick={() => setShowBatches(true)}>🧪 Batch & Prep</Button>
+  <Button variant="outline" className="hidden sm:inline-flex" onClick={() => setShowFilters((prev) => !prev)}>
+    {showFilters ? "Hide Filters" : "Show Filters"}
+  </Button>
+  <Button variant="outline" onClick={() => setDarkMode((prev) => !prev)}>
+    {darkMode ? "🌞 Light Mode" : "🌙 Dark Mode"}
+  </Button>
+  <Button
+    onClick={async () => {
+      const isAuthed = await checkPassword();
+      if (isAuthed) {
+        if (showBatches) {
+          setShowAddBatchModal(true);
+        } else {
+          setShowAddModal(true);
+        }
+      } else {
+        alert("Incorrect password.");
+      }
+    }}
+  >
+    ➕ Add {showBatches ? "Batch" : "Cocktail"}
+  </Button>
+</div>
         {/* Search */}
         <Input
           type="text"
