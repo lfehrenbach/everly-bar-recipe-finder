@@ -202,23 +202,25 @@ const [showAddBatchModal, setShowAddBatchModal] = useState(false);
     </fieldset>
 
 {/* Liquor Types */}
-<fieldset className="flex flex-col gap-1">
-  <span className="font-medium">Liquor Types</span>
-  {["vodka", "gin", "tequila", "rum", "whiskey", "mezcal", "brandy", "liqueur"].map((type) => (
-    <label key={type} className="flex items-center gap-1">
-      <input
-        type="checkbox"
-        checked={filterLiquorTypes.includes(type)}
-        onChange={() =>
-          setFilterLiquorTypes((prev) =>
-            prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type]
-          )
-        }
-      />
-      <span className="capitalize">{type}</span>
-    </label>
-  ))}
-</fieldset>
+<label className="flex flex-col">
+  <span className="mb-1 font-medium">Liquor Types</span>
+  <select
+    multiple
+    className="border p-2 rounded bg-white dark:bg-gray-900 h-32"
+    value={filterLiquorTypes}
+    onChange={(e) => {
+      const selectedOptions = Array.from(e.target.selectedOptions, (opt) => opt.value);
+      setFilterLiquorTypes(selectedOptions);
+    }}
+  >
+    {["vodka", "gin", "tequila", "rum", "whiskey", "mezcal", "brandy", "liqueur"].map((type) => (
+      <option key={type} value={type}>
+        {type.charAt(0).toUpperCase() + type.slice(1)}
+      </option>
+    ))}
+  </select>
+</label>
+
 
 
     {/* Clear Filters Button */}
