@@ -41,6 +41,8 @@ const [showAddBatchModal, setShowAddBatchModal] = useState(false);
   const [filterSeasons, setFilterSeasons] = useState<string[]>([]);
   const [filterLiquorTypes, setFilterLiquorTypes] = useState<string[]>([]);
   const [darkMode, setDarkMode] = useState(false);
+const [externalResults, setExternalResults] = useState<any[]>([]);
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -88,24 +90,16 @@ const [showAddBatchModal, setShowAddBatchModal] = useState(false);
 const handleExternalSearch = async (query: string) => {
   try {
     const results = await fetchExternalCocktailFromGoogle(query);
-    console.log("External results:", results);
-
     if (!results.length) {
       toast.info("No external results found.");
       return;
     }
-
-    const names = results
-      .map((r: { title?: string; snippet?: string }) => r.title || r.snippet || "Unknown")
-      .join("\n\n");
-
-    alert(`🔍 External Results:\n\n${names}`);
+    setExternalResults(results);
   } catch (error) {
     console.error("External search failed:", error);
     toast.error("❌ External search failed.");
   }
 };
-
 
 
   return (
@@ -545,6 +539,29 @@ const handleExternalSearch = async (query: string) => {
   />
 )}
       </div>
+{externalResults.length > 0 && (
+  <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+    <div className="bg-white dark:bg-gray-900 p-6 rounded shadow-lg max-w-lg w-full space-y-4 overflow-y-auto max-h-[80vh]">
+      <h2 className="text-xl font-bold">External Results</h2>
+      <ul className="space-y-2">
+        {externalResults.map((result, i) => (
+          <li key={i}>
+            <a
+              href={result.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 hover:underline"
+            >
+              {result.title}
+            </a>
+          </li>
+        ))}
+      </ul>
+      <Button onClick={() => setExternalResults([])}>Close</Button>
+    </div>
+  </div>
+)}
+
     </main>
   );
 }
