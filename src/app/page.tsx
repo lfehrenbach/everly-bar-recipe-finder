@@ -196,6 +196,31 @@ const [showAddBatchModal, setShowAddBatchModal] = useState(false);
   </div>
 </div>
 
+{/* Allergens – Mobile */}
+<label className="sm:hidden flex flex-col">
+  <span className="mb-1 font-medium">Allergens</span>
+  <select
+    multiple
+    className="border p-2 rounded bg-white dark:bg-gray-900 h-32"
+    value={filterAllergens}
+    onChange={(e) => {
+      const selected = Array.from(e.target.selectedOptions, (opt) => opt.value);
+      setFilterAllergens(selected);
+    }}
+  >
+    {[
+      { value: "nuts", label: "🥜 Nuts" },
+      { value: "eggs", label: "🥚 Eggs" },
+      { value: "dairy", label: "🥛 Dairy" },
+      { value: "gluten", label: "🌾 Gluten" },
+    ].map(({ value, label }) => (
+      <option key={value} value={value}>
+        {label}
+      </option>
+    ))}
+  </select>
+</label>
+
 
 {/* Seasons – Desktop */}
 <div className="hidden sm:flex flex-col gap-1">
@@ -231,6 +256,31 @@ const [showAddBatchModal, setShowAddBatchModal] = useState(false);
     ))}
   </div>
 </div>
+
+{/* Seasons – Mobile */}
+<label className="sm:hidden flex flex-col">
+  <span className="mb-1 font-medium">Seasons</span>
+  <select
+    multiple
+    className="border p-2 rounded bg-white dark:bg-gray-900 h-32"
+    value={filterSeasons}
+    onChange={(e) => {
+      const selected = Array.from(e.target.selectedOptions, (opt) => opt.value);
+      setFilterSeasons(selected);
+    }}
+  >
+    {[
+      { value: "spring", label: "🌸 Spring" },
+      { value: "summer", label: "☀️ Summer" },
+      { value: "fall", label: "🍂 Fall" },
+      { value: "winter", label: "❄️ Winter" },
+    ].map(({ value, label }) => (
+      <option key={value} value={value}>
+        {label}
+      </option>
+    ))}
+  </select>
+</label>
 
 
 {/* Liquor Types – Desktop */}
