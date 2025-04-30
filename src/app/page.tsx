@@ -8,6 +8,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import AddCocktailModal from "@/components/AddCocktailModal";
+import AddBatchModal from "@/components/AddBatchModal";
+import EditBatchModal from "@/components/EditBatchModal";
 import { checkPassword } from "@/utils/auth";
 import {
   DropdownMenu,
@@ -27,6 +29,8 @@ export default function Home() {
   const [batches, setBatches] = useState<Batch[]>([]);
   const [editingRecipe, setEditingRecipe] = useState<Cocktail | null>(null);
   const [showAddModal, setShowAddModal] = useState(false);
+const [editingBatch, setEditingBatch] = useState<Batch | null>(null);
+const [showAddBatchModal, setShowAddBatchModal] = useState(false);
   const [query, setQuery] = useState("");
   const [showBatches, setShowBatches] = useState(false);
   const [showFilters, setShowFilters] = useState(true);
@@ -96,16 +100,16 @@ export default function Home() {
           <Button variant="outline" onClick={() => setDarkMode((prev) => !prev)}>
             {darkMode ? "🌞 Light Mode" : "🌙 Dark Mode"}
           </Button>
-          <Button
-            onClick={async () => {
-              const isAuthed = await checkPassword();
-              if (isAuthed) setShowAddModal(true);
-              else alert("Incorrect password.");
-            }}
-          >
-            ➕ Add Cocktail
-          </Button>
-        </div>
+<Button
+  onClick={async () => {
+    const isAuthed = await checkPassword();
+    if (isAuthed) {
+      showBatches ? setShowAddBatchModal(true) : setShowAddModal(true);
+    } else alert("Incorrect password.");
+  }}
+>
+  ➕ Add {showBatches ? "Batch" : "Cocktail"}
+</Button>        </div>
 
         {/* Search */}
         <Input
@@ -290,35 +294,35 @@ export default function Home() {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end" className="w-32">
-                        <DropdownMenuItem
-                          onSelect={async () => {
-                            const isAuthed = await checkPassword();
-                            if (isAuthed && isCocktail(item)) {
-                              setEditingRecipe(item);
-                              setShowAddModal(true);
-                            }
-                          }}
-                        >
-                          <Pencil className="mr-2 h-4 w-4" /> Edit
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          onSelect={async () => {
-                            const isAuthed = await checkPassword();
-                            if (isAuthed && isCocktail(item)) {
-                              const confirmDelete = confirm(`Delete "${item.name}"?`);
-                              if (confirmDelete) {
-                                const { error } = await supabase.from("cocktails").delete().eq("id", item.id);
-                                if (error) toast.error("❌ Failed to delete cocktail!");
-                                else {
-                                  setRecipes((prev) => prev.filter((r) => r.id !== item.id));
-                                  toast.success(`Deleted "${item.name}" 🗑️`);
-                                }
-                              }
-                            }
-                          }}
-                        >
-                          <Trash2 className="mr-2 h-4 w-4 text-red-600" /> Delete
-                        </DropdownMenuItem>
+<DropdownMenuItem
+  onSelect={async () => {
+    const isAuthed = await checkPassword();
+    if (isAuthed) {
+      setEditingBatch(item);
+    }
+  }}
+>
+  <Pencil className="mr-2 h-4 w-4" /> Edit
+</DropdownMenuItem>
+
+<DropdownMenuItem
+  onSelect={async () => {
+    const isAuthed = await checkPassword();
+    if (isAuthed) {
+      const confirmDelete = confirm(`Delete "${item.name}"?`);
+      if (confirmDelete) {
+        const { error } = await supabase.from("batches").delete().eq("id", item.id);
+        if (error) toast.error("❌ Failed to delete batch!");
+        else {
+          setBatches((prev) => prev.filter((b) => b.id !== item.id));
+          toast.success(`Deleted "${item.name}" 🗑️`);
+        }
+      }
+    }
+  }}
+>
+  <Trash2 className="mr-2 h-4 w-4 text-red-600" /> Delete
+</DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </div>
@@ -369,6 +373,29 @@ export default function Home() {
             }}
           />
         )}
+{showAddBatchModal && (
+  <AddBatchModal
+    initialData={editingBatch ?? undefined}
+    onClose={() => {
+      setShowAddBatchModal(false);
+      setEditingBatch(null);
+    }}
+    onAdd={async (newBatch) => {
+      // add batch logic...
+    }}
+  />
+)}
+
+{editingBatch && !showAddBatchModal && (
+  <EditBatchModal
+    initialData={editingBatch}
+    onClose={() => setEditingBatch(null)}
+    onUpdate={async (updatedBatch) => {
+      // update batch logic...
+    }}
+  />
+)}
+
       </div>
     </main>
   );
