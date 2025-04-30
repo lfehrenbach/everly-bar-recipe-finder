@@ -95,13 +95,17 @@ const handleExternalSearch = async (query: string) => {
       return;
     }
 
-    const names = results.map((r: any) => r.title || r.snippet || "Unknown").join("\n\n");
+    const names = results
+      .map((r: { title?: string; snippet?: string }) => r.title || r.snippet || "Unknown")
+      .join("\n\n");
+
     alert(`🔍 External Results:\n\n${names}`);
   } catch (error) {
     console.error("External search failed:", error);
     toast.error("❌ External search failed.");
   }
 };
+
 
 
   return (
