@@ -333,46 +333,46 @@ const [showAddBatchModal, setShowAddBatchModal] = useState(false);
         </div>
 
         {/* Modal */}
-        {showAddModal && (
-          <AddCocktailModal
-            initialData={editingRecipe ?? undefined}
-            onClose={() => {
-              setShowAddModal(false);
-              setEditingRecipe(null);
-            }}
-            onAdd={async (newRecipe) => {
-              try {
-                if (editingRecipe) {
-                  const { error } = await supabase
-                    .from("cocktails")
-                    .update(newRecipe)
-                    .eq("id", editingRecipe.id);
-                  if (error) throw error;
-                  setRecipes((prev) => prev.map((r) => (r.id === editingRecipe.id ? newRecipe : r)));
-                  toast.success(`Updated "${newRecipe.name}" 🍸`);
-                } else {
-                  const newRecipeCopy = { ...newRecipe };
-                  Reflect.deleteProperty(newRecipeCopy, "id");
-                  const { data, error } = await supabase
-                    .from("cocktails")
-                    .insert([newRecipeCopy])
-                    .select()
-                    .single();
-                  if (error) throw error;
-                  setRecipes((prev) => [...prev, data]);
-                  toast.success(`Added "${newRecipe.name}" 🥂`);
-                }
-              } catch (error) {
-                const message = error instanceof Error ? error.message : JSON.stringify(error);
-                console.error("❌ Error saving cocktail:", message);
-                toast.error(`❌ Failed to save cocktail: ${message}`);
-              } finally {
-                setShowAddModal(false);
-                setEditingRecipe(null);
-              }
-            }}
-          />
-        )}
+{showAddModal && (
+  <AddCocktailModal
+    initialData={editingRecipe ?? undefined}
+    onClose={() => {
+      setShowAddModal(false);
+      setEditingRecipe(null);
+    }}
+    onAdd={async (newRecipe) => {
+      try {
+        if (editingRecipe) {
+          const { error } = await supabase
+            .from("cocktails")
+            .update(newRecipe)
+            .eq("id", editingRecipe.id);
+          if (error) throw error;
+          setRecipes((prev) => prev.map((r) => (r.id === editingRecipe.id ? newRecipe : r)));
+          toast.success(`Updated "${newRecipe.name}" 🍸`);
+        } else {
+          const newRecipeCopy = { ...newRecipe };
+          Reflect.deleteProperty(newRecipeCopy, "id");
+          const { data, error } = await supabase
+            .from("cocktails")
+            .insert([newRecipeCopy])
+            .select()
+            .single();
+          if (error) throw error;
+          setRecipes((prev) => [...prev, data]);
+          toast.success(`Added "${newRecipe.name}" 🥂`);
+        }
+      } catch (error) {
+        const message = error instanceof Error ? error.message : JSON.stringify(error);
+        toast.error(`❌ Failed to save cocktail: ${message}`);
+      } finally {
+        setShowAddModal(false);
+        setEditingRecipe(null);
+      }
+    }}
+  />
+)}
+
 {showAddBatchModal && (
   <AddBatchModal
     initialData={editingBatch ?? undefined}
@@ -381,7 +381,24 @@ const [showAddBatchModal, setShowAddBatchModal] = useState(false);
       setEditingBatch(null);
     }}
     onAdd={async (newBatch) => {
-      // add batch logic...
+      try {
+        const newBatchCopy = { ...newBatch };
+        Reflect.deleteProperty(newBatchCopy, "id");
+        const { data, error } = await supabase
+          .from("batches")
+          .insert([newBatchCopy])
+          .select()
+          .single();
+        if (error) throw error;
+        setBatches((prev) => [...prev, data]);
+        toast.success(`Added "${newBatch.name}" 🧪`);
+      } catch (error) {
+        const message = error instanceof Error ? error.message : JSON.stringify(error);
+        toast.error(`❌ Failed to save batch: ${message}`);
+      } finally {
+        setShowAddBatchModal(false);
+        setEditingBatch(null);
+      }
     }}
   />
 )}
@@ -391,11 +408,25 @@ const [showAddBatchModal, setShowAddBatchModal] = useState(false);
     initialData={editingBatch}
     onClose={() => setEditingBatch(null)}
     onUpdate={async (updatedBatch) => {
-      // update batch logic...
+      try {
+        const { error } = await supabase
+          .from("batches")
+          .update(updatedBatch)
+          .eq("id", updatedBatch.id);
+        if (error) throw error;
+        setBatches((prev) =>
+          prev.map((b) => (b.id === updatedBatch.id ? updatedBatch : b))
+        );
+        toast.success(`Updated "${updatedBatch.name}" 🧪`);
+      } catch (error) {
+        const message = error instanceof Error ? error.message : JSON.stringify(error);
+        toast.error(`❌ Failed to update batch: ${message}`);
+      } finally {
+        setEditingBatch(null);
+      }
     }}
   />
 )}
-
       </div>
     </main>
   );
