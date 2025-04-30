@@ -320,19 +320,30 @@ const [showAddBatchModal, setShowAddBatchModal] = useState(false);
 <DropdownMenuItem
   onSelect={async () => {
     const isAuthed = await checkPassword();
-    if (isAuthed) {
-      const confirmDelete = confirm(`Delete "${item.name}"?`);
-      if (confirmDelete) {
+    if (!isAuthed) return;
+
+    const confirmDelete = confirm(`Delete "${item.name}"?`);
+    if (!confirmDelete) return;
+
+    try {
+      if (isCocktail(item)) {
+        const { error } = await supabase.from("cocktails").delete().eq("id", item.id);
+        if (error) throw error;
+        setRecipes((prev) => prev.filter((r) => r.id !== item.id));
+        toast.success(`Deleted "${item.name}" 🍸`);
+      } else {
         const { error } = await supabase.from("batches").delete().eq("id", item.id);
-        if (error) toast.error("❌ Failed to delete batch!");
-        else {
-          setBatches((prev) => prev.filter((b) => b.id !== item.id));
-          toast.success(`Deleted "${item.name}" 🗑️`);
-        }
+        if (error) throw error;
+        setBatches((prev) => prev.filter((b) => b.id !== item.id));
+        toast.success(`Deleted "${item.name}" 🧪`);
       }
+    } catch (error) {
+      const message = error instanceof Error ? error.message : JSON.stringify(error);
+      toast.error(`❌ Failed to delete: ${message}`);
     }
   }}
 >
+
   <Trash2 className="mr-2 h-4 w-4 text-red-600" /> Delete
 </DropdownMenuItem>
                       </DropdownMenuContent>
