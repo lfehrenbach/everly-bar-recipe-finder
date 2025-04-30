@@ -277,7 +277,7 @@ const [showAddBatchModal, setShowAddBatchModal] = useState(false);
                             left:
                               item.sweetness === "dry" ? "7%" :
                               item.sweetness === "semi-dry" ? "33%" :
-                              item.sweetness === "balanced" ? "66%" :
+                              item.sweetness === "balanced" ? "63%" :
                               item.sweetness === "sweet" ? "93%" : "50%",
                             transform: "translateX(-50%)",
                           }}
