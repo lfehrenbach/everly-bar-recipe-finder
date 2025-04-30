@@ -303,11 +303,17 @@ const [showAddBatchModal, setShowAddBatchModal] = useState(false);
 <DropdownMenuItem
   onSelect={async () => {
     const isAuthed = await checkPassword();
-    if (isAuthed) {
+    if (!isAuthed) return;
+
+    if (isCocktail(item)) {
+      setEditingRecipe(item);
+      setShowAddModal(true);
+    } else {
       setEditingBatch(item);
     }
   }}
 >
+
   <Pencil className="mr-2 h-4 w-4" /> Edit
 </DropdownMenuItem>
 
