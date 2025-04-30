@@ -128,248 +128,229 @@ const [showAddBatchModal, setShowAddBatchModal] = useState(false);
 
 {/* Filters */}
 {!showBatches && showFilters && (
-  <div className="flex flex-wrap gap-4 mb-6 text-sm items-center border rounded p-4 bg-white dark:bg-gray-800 shadow-sm overflow-x-auto">
-    {/* Sort Dropdown */}
-    <label className="flex flex-col">
-      <span className="mb-1 font-medium">Sort</span>
+  <div className="space-y-4 text-sm border rounded p-4 bg-white dark:bg-gray-800 shadow-sm overflow-x-auto">
+
+    {/* Sort & Sweetness */}
+    <div className="flex flex-wrap gap-4">
+      <label className="flex flex-col">
+        <span className="mb-1 font-medium">Sort</span>
+        <select
+          className="border p-2 rounded bg-white dark:bg-gray-900"
+          value={sortOption}
+          onChange={(e) => setSortOption(e.target.value)}
+        >
+          <option value="">Sort by...</option>
+          <option value="name-asc">Name A–Z</option>
+          <option value="name-desc">Name Z–A</option>
+          <option value="sweetness">Sweetness Level</option>
+          <option value="liquorForward">Strength</option>
+        </select>
+      </label>
+
+      <label className="flex flex-col">
+        <span className="mb-1 font-medium">Sweetness</span>
+        <select
+          className="border p-2 rounded bg-white dark:bg-gray-900"
+          value={filterSweetness}
+          onChange={(e) => setFilterSweetness(e.target.value)}
+        >
+          <option value="">All Sweetness</option>
+          <option value="dry">Dry</option>
+          <option value="semi-dry">Semi-Dry</option>
+          <option value="balanced">Balanced</option>
+          <option value="sweet">Sweet</option>
+        </select>
+      </label>
+    </div>
+
+    {/* Allergens */}
+    <details className="group border rounded p-2">
+      <summary className="cursor-pointer font-medium">Allergens</summary>
+      <div className="mt-2 flex flex-wrap gap-2">
+        {[
+          { key: "nuts", label: "🥜 Nuts" },
+          { key: "eggs", label: "🥚 Eggs" },
+          { key: "dairy", label: "🥛 Dairy" },
+          { key: "gluten", label: "🌾 Gluten" },
+        ].map(({ key, label }) => (
+          <button
+            key={key}
+            className={`px-3 py-1 rounded-full border text-sm ${
+              filterAllergens.includes(key)
+                ? "bg-red-100 text-red-600 border-red-300"
+                : "bg-gray-100 text-gray-600 border-gray-300"
+            }`}
+            onClick={() =>
+              setFilterAllergens((prev) =>
+                prev.includes(key) ? prev.filter((a) => a !== key) : [...prev, key]
+              )
+            }
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+    </details>
+
+    {/* Allergens – Mobile */}
+    <label className="sm:hidden flex flex-col">
+      <span className="mb-1 font-medium">Allergens</span>
       <select
-        className="border p-2 rounded bg-white dark:bg-gray-900"
-        value={sortOption}
-        onChange={(e) => setSortOption(e.target.value)}
+        multiple
+        className="border p-2 rounded bg-white dark:bg-gray-900 h-32"
+        value={filterAllergens}
+        onChange={(e) => {
+          const selected = Array.from(e.target.selectedOptions, (opt) => opt.value);
+          setFilterAllergens(selected);
+        }}
       >
-        <option value="">Sort by...</option>
-        <option value="name-asc">Name A–Z</option>
-        <option value="name-desc">Name Z–A</option>
-        <option value="sweetness">Sweetness Level</option>
-        <option value="liquorForward">Strength</option>
+        {[
+          { value: "nuts", label: "🥜 Nuts" },
+          { value: "eggs", label: "🥚 Eggs" },
+          { value: "dairy", label: "🥛 Dairy" },
+          { value: "gluten", label: "🌾 Gluten" },
+        ].map(({ value, label }) => (
+          <option key={value} value={value}>
+            {label}
+          </option>
+        ))}
       </select>
     </label>
 
-    {/* Sweetness Dropdown */}
-    <label className="flex flex-col">
-      <span className="mb-1 font-medium">Sweetness</span>
+    {/* Seasons */}
+    <details className="group border rounded p-2">
+      <summary className="cursor-pointer font-medium">Seasons</summary>
+      <div className="mt-2 flex flex-wrap gap-2">
+        {[
+          { key: "spring", label: "🌸 Spring" },
+          { key: "summer", label: "☀️ Summer" },
+          { key: "fall", label: "🍂 Fall" },
+          { key: "winter", label: "❄️ Winter" },
+        ].map(({ key, label }) => (
+          <button
+            key={key}
+            className={`px-3 py-1 rounded-full border text-sm ${
+              filterSeasons.includes(key)
+                ? "bg-blue-100 text-blue-600 border-blue-300"
+                : "bg-gray-100 text-gray-600 border-gray-300"
+            }`}
+            onClick={() =>
+              setFilterSeasons((prev) =>
+                prev.includes(key) ? prev.filter((s) => s !== key) : [...prev, key]
+              )
+            }
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+    </details>
+
+    {/* Seasons – Mobile */}
+    <label className="sm:hidden flex flex-col">
+      <span className="mb-1 font-medium">Seasons</span>
       <select
-        className="border p-2 rounded bg-white dark:bg-gray-900"
-        value={filterSweetness}
-        onChange={(e) => setFilterSweetness(e.target.value)}
+        multiple
+        className="border p-2 rounded bg-white dark:bg-gray-900 h-32"
+        value={filterSeasons}
+        onChange={(e) => {
+          const selected = Array.from(e.target.selectedOptions, (opt) => opt.value);
+          setFilterSeasons(selected);
+        }}
       >
-        <option value="">All Sweetness</option>
-        <option value="dry">Dry</option>
-        <option value="semi-dry">Semi-Dry</option>
-        <option value="balanced">Balanced</option>
-        <option value="sweet">Sweet</option>
+        {[
+          { value: "spring", label: "🌸 Spring" },
+          { value: "summer", label: "☀️ Summer" },
+          { value: "fall", label: "🍂 Fall" },
+          { value: "winter", label: "❄️ Winter" },
+        ].map(({ value, label }) => (
+          <option key={value} value={value}>
+            {label}
+          </option>
+        ))}
       </select>
     </label>
 
-{/* Allergens – Desktop */}
-<div className="hidden sm:flex flex-col gap-1">
-  <span className="font-medium mb-1">Allergens</span>
-  <div className="flex flex-wrap gap-2">
-    {[
-      { key: "nuts", label: "🥜 Nuts" },
-      { key: "eggs", label: "🥚 Eggs" },
-      { key: "dairy", label: "🥛 Dairy" },
-      { key: "gluten", label: "🌾 Gluten" },
-    ].map(({ key, label }) => (
-      <label
-        key={key}
-        className={`cursor-pointer border rounded-full px-3 py-1 text-sm flex items-center gap-1 ${
-          filterAllergens.includes(key)
-            ? "bg-red-100 border-red-400 text-red-800"
-            : "bg-white dark:bg-gray-800 border-gray-300 text-gray-700"
-        }`}
+    {/* Liquor Types */}
+    <details className="group border rounded p-2">
+      <summary className="cursor-pointer font-medium">Liquor Types</summary>
+      <div className="mt-2 flex flex-wrap gap-2">
+        {[
+          { type: "vodka", label: "🍸 Vodka" },
+          { type: "gin", label: "🌲 Gin" },
+          { type: "tequila", label: "🍋🧂 Tequila" },
+          { type: "rum", label: "🏴‍☠️ Rum" },
+          { type: "whiskey", label: "🥃 Whiskey" },
+          { type: "mezcal", label: "🔥 Mezcal" },
+          { type: "brandy", label: "🍷 Brandy" },
+          { type: "liqueur", label: "🍬 Liqueur" },
+        ].map(({ type, label }) => (
+          <button
+            key={type}
+            className={`px-3 py-1 rounded-full border text-sm ${
+              filterLiquorTypes.includes(type)
+                ? "bg-purple-100 text-purple-600 border-purple-300"
+                : "bg-gray-100 text-gray-600 border-gray-300"
+            }`}
+            onClick={() =>
+              setFilterLiquorTypes((prev) =>
+                prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type]
+              )
+            }
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+    </details>
+
+    {/* Liquor Types – Mobile */}
+    <label className="sm:hidden flex flex-col">
+      <span className="mb-1 font-medium">Liquor Types</span>
+      <select
+        multiple
+        className="border p-2 rounded bg-white dark:bg-gray-900 h-32"
+        value={filterLiquorTypes}
+        onChange={(e) => {
+          const selected = Array.from(e.target.selectedOptions, (opt) => opt.value);
+          setFilterLiquorTypes(selected);
+        }}
       >
-        <input
-          type="checkbox"
-          value={key}
-          checked={filterAllergens.includes(key)}
-          onChange={() =>
-            setFilterAllergens((prev) =>
-              prev.includes(key) ? prev.filter((a) => a !== key) : [...prev, key]
-            )
-          }
-          className="hidden"
-        />
-        <span>{label}</span>
-      </label>
-    ))}
-  </div>
-</div>
-
-{/* Allergens – Mobile */}
-<label className="sm:hidden flex flex-col">
-  <span className="mb-1 font-medium">Allergens</span>
-  <select
-    multiple
-    className="border p-2 rounded bg-white dark:bg-gray-900 h-32"
-    value={filterAllergens}
-    onChange={(e) => {
-      const selected = Array.from(e.target.selectedOptions, (opt) => opt.value);
-      setFilterAllergens(selected);
-    }}
-  >
-    {[
-      { value: "nuts", label: "🥜 Nuts" },
-      { value: "eggs", label: "🥚 Eggs" },
-      { value: "dairy", label: "🥛 Dairy" },
-      { value: "gluten", label: "🌾 Gluten" },
-    ].map(({ value, label }) => (
-      <option key={value} value={value}>
-        {label}
-      </option>
-    ))}
-  </select>
-</label>
-
-
-{/* Seasons – Desktop */}
-<div className="hidden sm:flex flex-col gap-1">
-  <span className="font-medium mb-1">Seasons</span>
-  <div className="flex flex-wrap gap-2">
-    {[
-      { key: "spring", label: "🌸 Spring" },
-      { key: "summer", label: "☀️ Summer" },
-      { key: "fall", label: "🍂 Fall" },
-      { key: "winter", label: "❄️ Winter" },
-    ].map(({ key, label }) => (
-      <label
-        key={key}
-        className={`cursor-pointer border rounded-full px-3 py-1 text-sm flex items-center gap-1 ${
-          filterSeasons.includes(key)
-            ? "bg-blue-100 border-blue-400 text-blue-800"
-            : "bg-white dark:bg-gray-800 border-gray-300 text-gray-700"
-        }`}
-      >
-        <input
-          type="checkbox"
-          value={key}
-          checked={filterSeasons.includes(key)}
-          onChange={() =>
-            setFilterSeasons((prev) =>
-              prev.includes(key) ? prev.filter((s) => s !== key) : [...prev, key]
-            )
-          }
-          className="hidden"
-        />
-        <span>{label}</span>
-      </label>
-    ))}
-  </div>
-</div>
-
-{/* Seasons – Mobile */}
-<label className="sm:hidden flex flex-col">
-  <span className="mb-1 font-medium">Seasons</span>
-  <select
-    multiple
-    className="border p-2 rounded bg-white dark:bg-gray-900 h-32"
-    value={filterSeasons}
-    onChange={(e) => {
-      const selected = Array.from(e.target.selectedOptions, (opt) => opt.value);
-      setFilterSeasons(selected);
-    }}
-  >
-    {[
-      { value: "spring", label: "🌸 Spring" },
-      { value: "summer", label: "☀️ Summer" },
-      { value: "fall", label: "🍂 Fall" },
-      { value: "winter", label: "❄️ Winter" },
-    ].map(({ value, label }) => (
-      <option key={value} value={value}>
-        {label}
-      </option>
-    ))}
-  </select>
-</label>
-
-
-{/* Liquor Types – Desktop */}
-<div className="hidden sm:flex flex-col gap-1">
-  <span className="font-medium mb-1">Liquor Types</span>
-  <div className="flex flex-wrap gap-2">
-    {[
-      { type: "vodka", label: "🍸 Vodka" },
-      { type: "gin", label: "🌲 Gin" },
-      { type: "tequila", label: "🍋🧂 Tequila" },
-      { type: "rum", label: "🏴‍☠️ Rum" },
-      { type: "whiskey", label: "🥃 Whiskey" },
-      { type: "mezcal", label: "🔥 Mezcal" },
-      { type: "brandy", label: "🍷 Brandy" },
-      { type: "liqueur", label: "🍬 Liqueur" },
-    ].map(({ type, label }) => (
-      <label
-        key={type}
-        className={`cursor-pointer border rounded-full px-3 py-1 text-sm flex items-center gap-1 ${
-          filterLiquorTypes.includes(type)
-            ? "bg-purple-100 border-purple-400 text-purple-800"
-            : "bg-white dark:bg-gray-800 border-gray-300 text-gray-700"
-        }`}
-      >
-        <input
-          type="checkbox"
-          value={type}
-          checked={filterLiquorTypes.includes(type)}
-          onChange={() =>
-            setFilterLiquorTypes((prev) =>
-              prev.includes(type)
-                ? prev.filter((t) => t !== type)
-                : [...prev, type]
-            )
-          }
-          className="hidden"
-        />
-        <span>{label}</span>
-      </label>
-    ))}
-  </div>
-</div>
-
-
-{/* Liquor Types – Mobile Dropdown */}
-<label className="sm:hidden flex flex-col">
-  <span className="mb-1 font-medium">Liquor Types</span>
-  <select
-    multiple
-    className="border p-2 rounded bg-white dark:bg-gray-900 h-32"
-    value={filterLiquorTypes}
-    onChange={(e) => {
-      const selected = Array.from(e.target.selectedOptions, (opt) => opt.value);
-      setFilterLiquorTypes(selected);
-    }}
-  >
-    {[
-      { type: "vodka", label: "🍸 Vodka" },
-      { type: "gin", label: "🌲 Gin" },
-      { type: "tequila", label: "🍋🧂 Tequila" },
-      { type: "rum", label: "🏴‍☠️ Rum" },
-      { type: "whiskey", label: "🥃 Whiskey" },
-      { type: "mezcal", label: "🔥 Mezcal" },
-      { type: "brandy", label: "🍷 Brandy" },
-      { type: "liqueur", label: "🍬 Liqueur" },
-    ].map(({ type, label }) => (
-      <option key={type} value={type}>
-        {label}
-      </option>
-    ))}
-  </select>
-</label>
-
+        {[
+          { type: "vodka", label: "🍸 Vodka" },
+          { type: "gin", label: "🌲 Gin" },
+          { type: "tequila", label: "🍋🧂 Tequila" },
+          { type: "rum", label: "🏴‍☠️ Rum" },
+          { type: "whiskey", label: "🥃 Whiskey" },
+          { type: "mezcal", label: "🔥 Mezcal" },
+          { type: "brandy", label: "🍷 Brandy" },
+          { type: "liqueur", label: "🍬 Liqueur" },
+        ].map(({ type, label }) => (
+          <option key={type} value={type}>
+            {label}
+          </option>
+        ))}
+      </select>
+    </label>
 
     {/* Clear Filters Button */}
-    <Button
-      variant="outline"
-      onClick={() => {
-        setSortOption("");
-        setFilterSweetness("");
-        setFilterAllergens([]);
-        setFilterSeasons([]);
-        setFilterLiquorTypes([]);
-      }}
-    >
-      Clear Filters
-    </Button>
+    <div className="flex justify-end pt-2">
+      <Button
+        variant="outline"
+        onClick={() => {
+          setSortOption("");
+          setFilterSweetness("");
+          setFilterAllergens([]);
+          setFilterSeasons([]);
+          setFilterLiquorTypes([]);
+        }}
+      >
+        Clear Filters
+      </Button>
+    </div>
   </div>
 )}
+
 
 
         {/* Recipe Cards */}
