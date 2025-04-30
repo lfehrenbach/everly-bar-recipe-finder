@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 import { Toaster, toast } from "sonner";
+import { fetchExternalCocktailFromGoogle } from "@/lib/fetchExternalCocktail";
 
 function isCocktail(item: Cocktail | Batch): item is Cocktail {
   return "garnish" in item;
@@ -84,6 +85,25 @@ const [showAddBatchModal, setShowAddBatchModal] = useState(false);
       batch.ingredients?.some((ing) => ing.toLowerCase().includes(query.toLowerCase()))
   );
 
+const handleExternalSearch = async (query: string) => {
+  try {
+    const results = await fetchExternalCocktailFromGoogle(query);
+    console.log("External results:", results);
+
+    if (!results.length) {
+      toast.info("No external results found.");
+      return;
+    }
+
+    const names = results.map((r: any) => r.title || r.snippet || "Unknown").join("\n\n");
+    alert(`🔍 External Results:\n\n${names}`);
+  } catch (error) {
+    console.error("External search failed:", error);
+    toast.error("❌ External search failed.");
+  }
+};
+
+
   return (
     <main className={darkMode ? "dark" : ""}>
       <div className="p-4 sm:p-6 max-w-4xl mx-auto bg-white dark:bg-gray-900 text-black dark:text-white min-h-screen transition-colors duration-300">
@@ -125,6 +145,14 @@ const [showAddBatchModal, setShowAddBatchModal] = useState(false);
           onChange={(e) => setQuery(e.target.value)}
           className="mb-6"
         />
+<Button
+  variant="outline"
+  className="w-full sm:w-auto mt-2"
+  onClick={() => handleExternalSearch(query)}
+>
+  🌐 Search Externally
+</Button>
+
 
 {/* Filters */}
 {!showBatches && showFilters && (
