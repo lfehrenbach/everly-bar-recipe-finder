@@ -201,16 +201,40 @@ const [showAddBatchModal, setShowAddBatchModal] = useState(false);
       ))}
     </fieldset>
 
-{/* Liquor Types */}
-<label className="flex flex-col">
+{/* Liquor Types – Desktop */}
+<div className="hidden sm:flex flex-col gap-1">
+  <span className="font-medium">Liquor Types</span>
+  <div className="flex flex-wrap gap-4">
+    {["vodka", "gin", "tequila", "rum", "whiskey", "mezcal", "brandy", "liqueur"].map((type) => (
+      <label key={type} className="flex items-center gap-1 text-sm">
+        <input
+          type="checkbox"
+          value={type}
+          checked={filterLiquorTypes.includes(type)}
+          onChange={() =>
+            setFilterLiquorTypes((prev) =>
+              prev.includes(type)
+                ? prev.filter((t) => t !== type)
+                : [...prev, type]
+            )
+          }
+        />
+        <span className="capitalize">{type}</span>
+      </label>
+    ))}
+  </div>
+</div>
+
+{/* Liquor Types – Mobile Dropdown */}
+<label className="sm:hidden flex flex-col">
   <span className="mb-1 font-medium">Liquor Types</span>
   <select
     multiple
     className="border p-2 rounded bg-white dark:bg-gray-900 h-32"
     value={filterLiquorTypes}
     onChange={(e) => {
-      const selectedOptions = Array.from(e.target.selectedOptions, (opt) => opt.value);
-      setFilterLiquorTypes(selectedOptions);
+      const selected = Array.from(e.target.selectedOptions, (opt) => opt.value);
+      setFilterLiquorTypes(selected);
     }}
   >
     {["vodka", "gin", "tequila", "rum", "whiskey", "mezcal", "brandy", "liqueur"].map((type) => (
@@ -220,7 +244,6 @@ const [showAddBatchModal, setShowAddBatchModal] = useState(false);
     ))}
   </select>
 </label>
-
 
 
     {/* Clear Filters Button */}
